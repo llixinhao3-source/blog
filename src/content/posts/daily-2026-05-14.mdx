@@ -1,9 +1,67 @@
 ---
-title: "每日学习 2026年5月13日"
-description: "（状态更新）"
+title: "每日学习 2026年5月14日"
+description: "今天主要做了：桌面宠物 brain 彻底修复、MCP Server 接入 OpenClaw、博客部署到 GitHub。"
 date: 2026-05-14
-category: guide
-tags: ["Hexo", "Butterfly", "桌面宠物", "MCP Server", "OpenClaw"]
+category: ai
+tags: ["桌面宠物", "MCP Server", "OpenClaw", "GitHub", "SSH", "Python"]
 draft: false
 ---
-（状态更新）
+## 今日概要
+
+今天主要做了：桌面宠物 brain 彻底修复、MCP Server 接入 OpenClaw、博客部署到 GitHub。
+
+## 工作记录
+
+### 1. 桌面宠物 brain 修复
+
+之前的 `desktop_pet.py` 一直报 `agent_runner_loop not found from agent_loop`，原因是：
+- `agentmain.py` 引用的是旧版完整 GenericAgent，需要整套 GA 环境
+- 实际可用的只有 `agent_loop.py` 里的 `GeneraticAgentLoop`
+
+修复内容：
+- `from agentmain import GeneraticAgent` → `from agent_loop import GeneraticAgentLoop`
+- 读取 `~/Desktop/ip/GenericAgent/key.txt` 获取 MiniMax API key
+- 新增 `import time` 修正 timeout 逻辑
+- `GeneraticAgentLoop` 在独立线程里运行，不阻塞 PyQt 主窗口
+- 修复 SyntaxError（split('\n') 断行问题）
+
+宠物现在已正常运行，PID 22322，左上角位置。
+
+### 2. MCP Server 配置接入 OpenClaw
+
+将 `sevik-blog` MCP Server 配置写入 `~/.openclaw/openclaw.json`：
+- 命令：`python3 /Users/sevik/Desktop/blog/scripts/mcp_server.py`
+- 环境变量：GIT_REMOTE=origin, GIT_BRANCH=main, CNAME_DOMAIN=sevik.me
+- Sev 重启 Gateway 后 MCP server 已就绪
+
+### 3. GitHub 推送 + SSH key 配置
+
+- 将 Git remote 改为 `git@github.com:llixinhao3-source/blog.git`
+- SSH key 已配置（ed25519），认证成功
+- 首次 push 完成：`ae66d4e 📝 自动日记: 2026-05-14`
+
+## 技术笔记
+
+### GeneraticAgentLoop vs agentmain
+轻量对话循环，不需要完整 GA 环境。初始化只需要 API key：
+```python
+from agent_loop import GeneraticAgentLoop
+agent = GeneraticAgentLoop(api_key)
+threading.Thread(target=agent.run, daemon=True).start()
+```
+
+### MCP Server JSON-RPC over stdio
+Python subprocess 的 `subprocess.PIPE` 配合 JSON-RPC 2.0：
+- 请求写入 stdin，响应从 stdout 读
+- 超过 30s 超时会话断开
+
+### GitHub SSH 认证
+```bash
+ssh -T git@github.com  # 验证
+git remote -v          # 检查 remote URL
+```
+
+## 明日关注
+- [ ] 博客首页 MusicPlayer.tsx 提交了 628 行 diff，需要检查
+- [ ] 桌面宠物其他状态 GIF 需要视频素材
+- [ ] 亚马逊蓝海报告超时问题待优化
