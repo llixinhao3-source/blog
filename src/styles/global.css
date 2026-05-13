@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-bg-base: #0b1120;
+  --color-card: rgba(30, 41, 59, 0.6);
+  --color-card-hover: rgba(30, 41, 59, 0.8);
+  --color-border-subtle: rgba(255, 255, 255, 0.08);
+  --color-border-card: rgba(255, 255, 255, 0.1);
+  --color-accent: #38bdf8;
+  --color-accent-warm: #fbbf24;
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    cursor: none;
+    background: linear-gradient(135deg, #0b1120 0%, #0f172a 40%, #0c1222 100%);
+    color: var(--color-text-primary);
+    font-family: 'Noto Sans SC', system-ui, sans-serif;
+  }
+
+  ::selection {
+    background-color: rgba(56, 189, 248, 0.25);
+    color: #e0f2fe;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+@layer components {
+  .glass-card {
+    background: rgba(30, 41, 59, 0.5);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    transition: all 0.5s ease;
+  }
+
+  .glass-card:hover {
+    background: rgba(30, 41, 59, 0.7);
+    border-color: rgba(255, 255, 255, 0.14);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    transform: scale(1.01);
+  }
+
+  .prose-custom {
+    --tw-prose-body: var(--color-text-secondary);
+    --tw-prose-headings: var(--color-text-primary);
+    --tw-prose-links: var(--color-accent);
+    --tw-prose-bold: var(--color-text-primary);
+    --tw-prose-counters: var(--color-text-muted);
+    --tw-prose-bullets: var(--color-text-muted);
+    --tw-prose-hr: rgba(255, 255, 255, 0.08);
+    --tw-prose-quotes: var(--color-text-secondary);
+    --tw-prose-quote-borders: var(--color-accent);
+    --tw-prose-captions: var(--color-text-muted);
+    --tw-prose-code: var(--color-accent);
+    --tw-prose-pre-code: var(--color-text-secondary);
+    --tw-prose-pre-bg: rgba(15, 23, 42, 0.8);
+    --tw-prose-th-borders: rgba(255, 255, 255, 0.1);
+    --tw-prose-td-borders: rgba(255, 255, 255, 0.06);
+  }
+
+  .nav-link {
+    position: relative;
+    color: var(--color-text-secondary);
+    transition: color 0.2s ease;
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    color: var(--color-text-primary);
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-accent), #818cf8);
+    border-radius: 1px;
+    transition: width 0.3s ease;
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    width: 100%;
+  }
+}

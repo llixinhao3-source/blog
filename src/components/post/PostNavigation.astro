@@ -1,0 +1,41 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  prev: CollectionEntry<'posts'> | null;
+  next: CollectionEntry<'posts'> | null;
+}
+
+const { prev, next } = Astro.props;
+---
+
+{prev || next ? (
+  <nav class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-10">
+    {prev ? (
+      <a
+        href={`/posts/${prev.id}`}
+        class="glass-card !rounded-2xl p-5 group !scale-100 hover:!scale-[1.01]"
+      >
+        <span class="text-xs text-text-muted block mb-1">← 上一篇</span>
+        <span class="text-sm text-text-secondary group-hover:text-accent transition-colors line-clamp-1">
+          {prev.data.title}
+        </span>
+      </a>
+    ) : (
+      <div />
+    )}
+    {next ? (
+      <a
+        href={`/posts/${next.id}`}
+        class="glass-card !rounded-2xl p-5 group !scale-100 hover:!scale-[1.01] text-right"
+      >
+        <span class="text-xs text-text-muted block mb-1">下一篇 →</span>
+        <span class="text-sm text-text-secondary group-hover:text-accent transition-colors line-clamp-1">
+          {next.data.title}
+        </span>
+      </a>
+    ) : (
+      <div />
+    )}
+  </nav>
+) : null}

@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TableOfContents from '../../components/post/TableOfContents.tsx';
+import PostNavigation from '../../components/post/PostNavigation.astro';
+import Badge from '../../components/ui/Badge.astro';
+import { getCollection, render } from 'astro:content';
+import { formatDateFull, getCategoryLabel } from '../../utils/date';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  const renderedPosts = await Promise.all(
+    posts.map(async (post) => {
+      const { Content } = await render(post);
+      return {
+        params: { slug: post.id },
+        props: { post, Content },
+      };
+    })
+  );
+  return renderedPosts;
+}
+
+const { post, Content } = Astro.props;
+
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+const sortedPosts = allPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const currentIndex = sortedPosts.findIndex((p) => p.id === post.id);
+const prevPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
+const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  image={post.data.image}
+>
+  <article class="pt-24 pb-16 px-6">
+    <div class="max-w-4xl mx-auto flex gap-10">
+      <div class="flex-1 min-w-0 max-w-[720px] mx-auto">
+        <header class="glass-card !rounded-3xl p-6 sm:p-8 mb-8 !scale-100">
+          <div class="flex items-center gap-3 mb-3">
+            <Badge text={getCategoryLabel(post.data.category)} />
+            <span class="text-xs text-text-muted tabular-nums" style="font-family: 'JetBrains Mono', monospace;">
+              {formatDateFull(post.data.date)}
+            </span>
+          </div>
+
+          <h1 class="text-2xl sm:text-3xl font-bold tracking-tight leading-tight mb-3">
+            {post.data.title}
+          </h1>
+
+          <p class="text-text-secondary leading-relaxed text-sm sm:text-base">
+            {post.data.description}
+          </p>
+
+          <div class="flex flex-wrap gap-2 mt-4">
+            {post.data.tags.map((tag) => (
+              <a
+                href={`/tags/${tag}`}
+                class="text-xs text-text-muted hover:text-accent transition-colors"
+              >
+                #{tag}
+              </a>
+            ))}
+          </div>
+        </header>
+
+        <div class="glass-card !rounded-3xl p-6 sm:p-8 !scale-100">
+          <div class="prose-custom prose prose-invert max-w-none">
+            <Content />
+          </div>
+        </div>
+
+        <PostNavigation prev={prevPost} next={nextPost} />
+      </div>
+
+      <aside class="hidden lg:block w-52 flex-shrink-0">
+        <div class="sticky top-24">
+          <TableOfContents client:visible />
+        </div>
+      </aside>
+    </div>
+  </article>
+</BaseLayout>

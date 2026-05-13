@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/home/ArticleCard.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  const tags = new Set<string>();
+  posts.forEach((post) => post.data.tags.forEach((tag) => tags.add(tag)));
+  return Array.from(tags).map((tag) => ({ params: { tag } }));
+}
+
+const { tag } = Astro.params;
+const posts = await getCollection('posts', ({ data }) =>
+  !data.draft && data.tags.includes(tag as string)
+);
+const sortedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout
+  title={`标签: ${tag}`}
+  description={`浏览标签为 "${tag}" 的所有技术文章`}
+>
+  <section class="pt-28 pb-16 px-6">
+    <div class="max-w-3xl mx-auto">
+      <div class="glass-card !rounded-3xl p-6 sm:p-8 mb-8 !scale-100">
+        <h1 class="text-2xl font-bold tracking-tight mb-1" style="font-family: 'JetBrains Mono', monospace;">
+          <span class="text-accent">#</span>{tag}
+        </h1>
+        <p class="text-sm text-text-muted">
+          共 {sortedPosts.length} 篇文章
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {sortedPosts.map((post) => (
+          <ArticleCard post={post} />
+        ))}
+      </div>
+
+      <div class="text-center mt-8">
+        <a
+          href="/tags"
+          class="text-sm text-text-muted hover:text-accent transition-colors"
+        >
+          ← 返回标签云
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,109 @@
+---
+title: "CUDA 编程入门：从 Grid 到 Warp 的并行计算之旅"
+description: "面向初学者的 CUDA 编程指南，从 GPU 架构基础出发，逐步掌握线程组织、内存层次与核函数编写。"
+date: 2024-10-05
+category: cuda
+tags: ["CUDA", "GPU", "并行计算", "入门教程"]
+draft: false
+---
+
+## 为什么学习 CUDA
+
+GPU 已经从单纯的图形渲染器演变为强大的通用并行计算平台。NVIDIA 的 CUDA（Compute Unified Device Architecture）是 GPU 编程的事实标准，掌握 CUDA 意味着能够利用数千个核心同时处理数据。
+
+## GPU 架构基础
+
+### 核心概念
+
+```
+Device（设备）
+  └── Grid（网格）
+        └── Block（线程块）
+              └── Thread（线程）
+                    └── Warp（线程束，32个线程）
+```
+
+### 内存层次
+
+| 内存类型 | 作用域 | 速度 | 容量 |
+|---------|--------|------|------|
+| 寄存器 | 单线程 | 最快 | 极少 |
+| 共享内存 | 线程块 | 快 | ~48KB |
+| 全局内存 | 全局 | 慢 | GB 级 |
+| 常量内存 | 全局（只读） | 快（有缓存） | 64KB |
+
+## 第一个 CUDA 程序
+
+```cuda
+#include <stdio.h>
+
+__global__ void vectorAdd(float *a, float *b, float *c, int n)
+{
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx < n) {
+        c[idx] = a[idx] + b[idx];
+    }
+}
+
+int main()
+{
+    int n = 1 << 20; // 1M elements
+    size_t bytes = n * sizeof(float);
+
+    float *h_a = (float*)malloc(bytes);
+    float *h_b = (float*)malloc(bytes);
+    float *h_c = (float*)malloc(bytes);
+
+    float *d_a, *d_b, *d_c;
+    cudaMalloc(&d_a, bytes);
+    cudaMalloc(&d_b, bytes);
+    cudaMalloc(&d_c, bytes);
+
+    cudaMemcpy(d_a, h_a, bytes, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_b, h_b, bytes, cudaMemcpyHostToDevice);
+
+    int threadsPerBlock = 256;
+    int blocksPerGrid = (n + threadsPerBlock - 1) / threadsPerBlock;
+    vectorAdd<<<blocksPerGrid, threadsPerBlock>>>(d_a, d_b, d_c, n);
+
+    cudaMemcpy(h_c, d_c, bytes, cudaMemcpyDeviceToHost);
+
+    cudaFree(d_a); cudaFree(d_b); cudaFree(d_c);
+    free(h_a); free(h_b); free(h_c);
+
+    return 0;
+}
+```
+
+## 线程组织
+
+```cuda
+// 1D 线程组织
+int tid = blockIdx.x * blockDim.x + threadIdx.x;
+
+// 2D 线程组织（图像处理常用）
+int x = blockIdx.x * blockDim.x + threadIdx.x;
+int y = blockIdx.y * blockDim.y + threadIdx.y;
+```
+
+## 共享内存优化
+
+```cuda
+__global__ void sharedMemExample(float *in, float *out, int n)
+{
+    extern __shared__ float shared[];
+    int tid = threadIdx.x;
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+
+    // 协作加载到共享内存
+    shared[tid] = (idx < n) ? in[idx] : 0;
+    __syncthreads();
+
+    // 使用共享内存计算
+    out[idx] = shared[tid] * 2.0f;
+}
+```
+
+## 小结
+
+CUDA 编程的核心在于理解 GPU 的并行架构和内存层次。合理组织线程和使用共享内存是性能优化的关键。

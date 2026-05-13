@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroSection from '../components/home/HeroSection.astro';
+import CardStack from '../components/home/CardStack.tsx';
+import ArticleCard from '../components/home/ArticleCard.astro';
+import StatsPanel from '../components/home/StatsPanel.tsx';
+import UptimeCounter from '../components/home/UptimeCounter.tsx';
+import { getCollection } from 'astro:content';
+import type { SiteStats } from '../types';
+
+const posts = await getCollection('posts', ({ data }) => !data.draft);
+const publishedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const allTags = new Set<string>();
+let totalWords = 0;
+
+publishedPosts.forEach((post) => {
+  post.data.tags.forEach((tag) => allTags.add(tag));
+  if (post.body) {
+    // Strip markdown/code blocks for accurate word count
+    let text = post.body
+      .replace(/```[\s\S]*?```/g, '')   // fenced code blocks
+      .replace(/`[^`]+`/g, '')          // inline code
+      .replace(/^#{1,6}\s+/gm, '')      // headings
+      .replace(/[*_~>|]+/g, ' ')        // markdown formatting
+      .replace(/\[.*?\]\(.*?\)/g, '')   // links
+      .replace(/\$\$[\s\S]*?\$\$/g, '') // math blocks
+      .replace(/<[^>]+>/g, '');         // HTML tags
+
+    const chineseChars = (text.match(/[\u4e00-\u9fff]/g) || []).length;
+    const englishWords = (text.match(/[a-zA-Z]+/g) || []).length;
+    totalWords += chineseChars + englishWords;
+  }
+});
+
+const stats: SiteStats = {
+  postCount: publishedPosts.length,
+  tagCount: allTags.size,
+  totalWords,
+};
+
+const searchPosts = publishedPosts.map((post) => ({
+  slug: post.id,
+  title: post.data.title,
+  description: post.data.description,
+  tags: post.data.tags,
+  category: post.data.category,
+  date: post.data.date.toISOString(),
+}));
+---
+
+<BaseLayout
+  title="首页"
+  description="专注 OpenClaw 应用落地与 AI Agent 全链路开发。记录智能体调教、Prompt 工程、工具链集成到企业级 AI 工作流部署的技术成长。"
+>
+  <HeroSection posts={searchPosts} />
+
+  <section class="px-6 pb-10">
+    <div class="max-w-xl mx-auto">
+      <div class="glass-card !rounded-2xl p-6">
+        <CardStack client:load />
+      </div>
+    </div>
+  </section>
+
+  <section class="px-6 pb-10">
+    <div class="max-w-3xl mx-auto">
+      <StatsPanel stats={stats} client:visible />
+    </div>
+  </section>
+
+  <section class="px-6 pb-10">
+    <div class="max-w-3xl mx-auto">
+      <UptimeCounter client:load />
+    </div>
+  </section>
+
+  <section class="px-6 pb-16">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-sm font-semibold text-text-muted tracking-wider uppercase mb-6 px-1">
+        最新文章
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {publishedPosts.slice(0, 6).map((post) => (
+          <ArticleCard post={post} />
+        ))}
+      </div>
+
+      {publishedPosts.length > 6 && (
+        <div class="text-center mt-8">
+          <a
+            href="/posts"
+            class="glass-card !rounded-2xl inline-block px-8 py-3 text-sm text-text-secondary hover:text-accent transition-colors !scale-100 hover:!scale-[1.02]"
+          >
+            查看全部 {publishedPosts.length} 篇文章 →
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

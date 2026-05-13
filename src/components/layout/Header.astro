@@ -1,0 +1,82 @@
+---
+import { NAV_ITEMS, SITE_CONFIG } from '../../data/site';
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="fixed top-3 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 w-[calc(100%-2rem)] max-w-3xl" id="site-header">
+  <div class="glass-card !rounded-2xl px-6 h-14 flex items-center justify-between" id="header-inner">
+    <a href="/" class="text-base font-semibold tracking-tight text-text-primary hover:text-accent transition-colors">
+      {SITE_CONFIG.title}
+    </a>
+
+    <nav class="hidden md:flex items-center gap-8">
+      {NAV_ITEMS.map((item) => {
+        const isActive = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href));
+        return (
+          <a
+            href={item.href}
+            class={`nav-link text-sm font-medium tracking-wide ${isActive ? 'active' : ''}`}
+          >
+            {item.label}
+          </a>
+        );
+      })}
+    </nav>
+
+    <button
+      id="mobile-menu-btn"
+      class="md:hidden flex flex-col gap-1.5 p-2"
+      aria-label="Toggle menu"
+    >
+      <span class="block w-5 h-[1.5px] rounded-full bg-text-secondary transition-all duration-300" />
+      <span class="block w-5 h-[1.5px] rounded-full bg-text-secondary transition-all duration-300" />
+    </button>
+  </div>
+
+  <div
+    id="mobile-menu"
+    class="md:hidden hidden mt-2 glass-card !rounded-2xl px-4 py-3"
+  >
+    <nav class="flex flex-col gap-1">
+      {NAV_ITEMS.map((item) => {
+        const isActive = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href));
+        return (
+          <a
+            href={item.href}
+            class={`text-sm font-medium py-2.5 px-3 rounded-xl transition-all ${isActive ? 'text-accent bg-accent/10' : 'text-text-secondary hover:text-text-primary hover:bg-white/5'}`}
+          >
+            {item.label}
+          </a>
+        );
+      })}
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.getElementById('site-header');
+  const mobileBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const headerInner = document.getElementById('header-inner');
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 40) {
+      headerInner?.classList.add('!bg-slate-800/70');
+    } else {
+      headerInner?.classList.remove('!bg-slate-800/70');
+    }
+  });
+
+  mobileBtn?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('hidden');
+    const spans = mobileBtn.querySelectorAll('span');
+    if (!mobileMenu?.classList.contains('hidden')) {
+      spans[0].style.transform = 'rotate(45deg) translateY(5px)';
+      spans[1].style.transform = 'rotate(-45deg) translateY(-5px)';
+    } else {
+      spans[0].style.transform = '';
+      spans[1].style.transform = '';
+    }
+  });
+</script>

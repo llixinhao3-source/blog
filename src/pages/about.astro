@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TechStackRadar from '../components/about/TechStackRadar.tsx';
+import CareerTimeline from '../components/about/CareerTimeline.tsx';
+import ExpandableProjectCards from '../components/about/ExpandableProjectCard.tsx';
+import HardwareZone from '../components/about/HardwareZone.tsx';
+import SocialLinks from '../components/about/SocialLinks.astro';
+---
+
+<BaseLayout
+  title="工程师数字档案"
+  description="Sevik · OpenClaw 应用工程师 / AI Agent 开发工程师。从智能体调教到企业工作流部署的全链路记录。"
+>
+  <section class="pt-28 pb-16 px-6">
+    <div class="max-w-3xl mx-auto">
+
+      <!-- 身份区 -->
+      <section class="mb-12">
+        <div class="glass-card !rounded-3xl p-6 sm:p-8 !scale-100">
+          <div class="flex items-start gap-6 mb-5">
+            <div
+              class="w-20 h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-2xl flex-shrink-0"
+              style="font-family: 'JetBrains Mono', monospace;"
+            >
+              S
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold tracking-tight mb-1" style="font-family: 'JetBrains Mono', monospace;">
+                李心皓
+              </h1>
+              <p class="text-sm text-accent mb-1">OpenClaw 应用工程师 / AI Agent 开发工程师</p>
+              <p class="text-sm text-text-secondary leading-relaxed mb-3">
+                专注 OpenClaw 应用落地与 AI Agent 全链路开发。从智能体的 Prompt 调教、工具链集成，到企业级 AI 工作流的自动化部署——每一步都追求工程化的极致效率。
+              </p>
+              <SocialLinks />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3">
+            <div class="text-center p-3 rounded-2xl bg-white/5 border border-white/5">
+              <div class="text-lg font-bold tabular-nums text-accent" style="font-family: 'JetBrains Mono', monospace;">14</div>
+              <div class="text-xs text-text-muted mt-1">技术博文</div>
+            </div>
+            <div class="text-center p-3 rounded-2xl bg-white/5 border border-white/5">
+              <div class="text-lg font-bold tabular-nums text-accent-warm" style="font-family: 'JetBrains Mono', monospace;">25</div>
+              <div class="text-xs text-text-muted mt-1">知识标签</div>
+            </div>
+            <div class="text-center p-3 rounded-2xl bg-white/5 border border-white/5">
+              <div class="text-lg font-bold tabular-nums text-text-primary" style="font-family: 'JetBrains Mono', monospace;">2 万</div>
+              <div class="text-xs text-text-muted mt-1">知识总量</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 核心技术引擎 -->
+      <section class="mb-12">
+        <div class="flex items-center gap-2 mb-5 px-1">
+          <span class="text-accent text-lg">◈</span>
+          <h2 class="text-sm font-semibold text-text-muted tracking-wider uppercase">核心技术引擎 · 技能雷达</h2>
+        </div>
+        <div class="glass-card !rounded-3xl p-6 sm:p-8 !scale-100">
+          <TechStackRadar client:visible />
+        </div>
+      </section>
+
+      <!-- 实验室实战 -->
+      <section class="mb-12">
+        <div class="flex items-center gap-2 mb-5 px-1">
+          <span class="text-accent text-lg">⚗</span>
+          <h2 class="text-sm font-semibold text-text-muted tracking-wider uppercase">实验室实战 · 交互式项目卡片</h2>
+        </div>
+        <p class="text-sm text-text-secondary mb-5 px-1 leading-relaxed">
+          点击卡片展开查看架构图与关键指标。每一个项目都是一份完整的实验报告。
+        </p>
+        <ExpandableProjectCards client:visible />
+      </section>
+
+      <!-- 进化时间线 -->
+      <section class="mb-12">
+        <div class="flex items-center gap-2 mb-5 px-1">
+          <span class="text-accent text-lg">⏳</span>
+          <h2 class="text-sm font-semibold text-text-muted tracking-wider uppercase">进化时间线 · 从校园到职场</h2>
+        </div>
+        <CareerTimeline client:visible />
+      </section>
+
+      <!-- Openclaw -->
+      <section class="mb-12">
+        <HardwareZone client:visible />
+      </section>
+
+      <!-- 知识库 -->
+      <section>
+        <div class="glass-card !rounded-3xl p-6 sm:p-8 text-center !scale-100">
+          <p class="text-sm text-text-secondary mb-3">
+            对 OpenClaw 应用落地与 AI Agent 全链路开发的深度思考，收录于本博客知识库
+          </p>
+          <a href="/posts" class="inline-flex items-center gap-2 text-sm text-accent hover:opacity-80 transition-colors">
+            浏览全部 14 篇文章 →
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </section>
+</BaseLayout>

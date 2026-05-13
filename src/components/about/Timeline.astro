@@ -1,0 +1,43 @@
+---
+interface Experience {
+  period: string;
+  title: string;
+  company: string;
+  description: string;
+  techStack: string[];
+}
+
+interface Props {
+  items: Experience[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="relative">
+  <div class="absolute left-4 top-0 bottom-0 w-px bg-border/50 hidden sm:block" />
+
+  <div class="space-y-8">
+    {items.map((item, i) => (
+      <div class={`relative pl-12 ${i % 2 === 0 ? 'sm:pr-8' : 'sm:pl-[calc(50%+2rem)]'}`}>
+        <div class="absolute left-2.5 top-1.5 w-3 h-3 rounded-full border-2 border-accent bg-bg-primary hidden sm:block" />
+
+        <div class="border border-border/30 rounded-lg p-5 hover:border-border transition-all hover:bg-bg-card/30">
+          <span class="text-xs text-text-muted block mb-2 tabular-nums" style="font-family: 'JetBrains Mono', monospace;">
+            {item.period}
+          </span>
+          <h3 class="text-base font-medium text-text-primary mb-1">{item.title}</h3>
+          <p class="text-sm text-accent mb-2">{item.company}</p>
+          <p class="text-sm text-text-secondary leading-relaxed mb-3">{item.description}</p>
+          <div class="flex flex-wrap gap-1.5">
+            {item.techStack.map((tech) => (
+              <span class="text-xs text-text-muted bg-bg-card/50 px-2 py-0.5 rounded">
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>

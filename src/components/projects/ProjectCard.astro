@@ -1,0 +1,48 @@
+---
+import type { Project } from '../../types';
+import Badge from '../ui/Badge.astro';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+---
+
+<div class="glass-card !rounded-2xl p-6 !scale-100 hover:!scale-[1.01]">
+  <div class="flex items-start gap-4">
+    <div class="flex-1">
+      <div class="flex items-center gap-2 mb-3">
+        <Badge
+          text={project.category === 'hardware' ? '硬件专区' : 'AI 实验室'}
+          variant={project.category === 'hardware' ? 'warm' : 'accent'}
+        />
+      </div>
+
+      <h3 class="text-lg font-semibold text-text-primary mb-2">
+        {project.title}
+      </h3>
+
+      <p class="text-sm text-text-secondary leading-relaxed mb-4">
+        {project.description}
+      </p>
+
+      <ul class="space-y-1.5 mb-4">
+        {project.highlights.map((highlight, i) => (
+          <li class="text-sm text-text-secondary flex items-start gap-2">
+            <span class="text-accent mt-1.5 block w-1 h-1 rounded-full flex-shrink-0" />
+            {highlight}
+          </li>
+        ))}
+      </ul>
+
+      <div class="flex flex-wrap gap-1.5">
+        {project.techStack.map((tech) => (
+          <span class="text-xs text-text-muted bg-white/5 px-2.5 py-1 rounded-lg">
+            {tech}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>

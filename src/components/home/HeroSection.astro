@@ -1,0 +1,81 @@
+---
+import ArmExplodedView from './ArmExplodedView.tsx';
+import MusicPlayer from './MusicPlayer.tsx';
+import PersonalIntro from './PersonalIntro.tsx';
+import SearchBox from './SearchBox.tsx';
+import MaskRevealHeading from './MaskRevealHeading.tsx';
+
+interface PostItem {
+  slug: string;
+  title: string;
+  description: string;
+  tags: string[];
+  category: string;
+  date: string;
+}
+
+const { posts } = Astro.props as { posts: PostItem[] };
+---
+
+<section class="relative overflow-hidden" style="height: 750px;">
+  <!-- 3D 粒子全幅背景 -->
+  <div class="absolute inset-0">
+    <ArmExplodedView client:load />
+  </div>
+
+  <!-- 全部内容叠加在粒子层上方 -->
+  <div class="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6">
+    <div class="w-full max-w-[1200px] flex flex-col items-center gap-5 relative">
+
+      <!-- 桌面：PersonalIntro 左 + MusicPlayer 右，等高水平 -->
+      <div class="hidden lg:flex items-start justify-between w-full absolute top-24 left-0 right-0 max-w-[1200px] mx-auto px-4">
+        <div class="w-52 flex-shrink-0">
+          <PersonalIntro client:load />
+        </div>
+        <div class="w-52 flex-shrink-0">
+          <MusicPlayer client:load />
+        </div>
+      </div>
+
+      <!-- 身份标签 -->
+      <div class="flex justify-center gap-3 sm:gap-4">
+        <span class="inline-block px-4 py-1.5 sm:px-5 sm:py-2 text-sm sm:text-base rounded-full border border-sky-400/30 text-sky-300 bg-sky-400/10 font-medium">
+          OpenClaw 应用工程师
+        </span>
+        <span class="inline-block px-4 py-1.5 sm:px-5 sm:py-2 text-sm sm:text-base rounded-full border border-amber-400/30 text-amber-300 bg-amber-400/10 font-medium">
+          AI Agent 开发工程师
+        </span>
+      </div>
+
+      <!-- 搜索框 -->
+      <div class="w-full flex justify-center">
+        <div class="w-full max-w-lg">
+          <SearchBox posts={posts} client:load />
+        </div>
+      </div>
+
+      <!-- 自我介绍文字 -->
+      <div class="text-center px-6 mt-2">
+        <MaskRevealHeading client:load />
+        <p class="text-base sm:text-lg text-text-secondary/80 max-w-md mx-auto leading-relaxed mt-4"
+           style="text-shadow: 0 0 25px rgba(15,23,42,0.6);">
+          OpenClaw 应用工程师 &amp; AI Agent 开发工程师
+        </p>
+        <p class="text-xs sm:text-sm text-text-muted/60 max-w-lg mx-auto mt-4 leading-relaxed"
+           style="text-shadow: 0 0 15px rgba(15,23,42,0.4);">
+          专注 OpenClaw 应用落地与 AI Agent 全链路开发，<br/>
+          深耕从智能体调教、Prompt 工程、工具链集成到企业级 AI 工作流部署的全栈探索，<br/>
+          沉淀从 OpenClaw 技能开发、大模型对接至业务场景落地的技术积累，<br/>
+          每一次调试与迭代，都是通往专业 AI 工程师的扎实脚印。
+        </p>
+      </div>
+
+      <!-- 移动端 PersonalIntro + MusicPlayer -->
+      <div class="lg:hidden flex flex-col items-center gap-3 mt-4 w-full">
+        <PersonalIntro client:load />
+        <MusicPlayer client:load />
+      </div>
+
+    </div>
+  </div>
+</section>

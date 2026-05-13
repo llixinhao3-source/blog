@@ -1,0 +1,87 @@
+---
+title: "ESP32-S3 开发入门：从零搭建嵌入式开发环境"
+description: "详细介绍 ESP32-S3 开发环境的搭建过程，包括工具链安装、项目配置与第一个 Blink 程序的运行。"
+date: 2024-06-15
+category: hardware
+tags: ["ESP32-S3", "嵌入式", "开发环境", "入门教程"]
+draft: false
+---
+
+## 前言
+
+ESP32-S3 是乐鑫科技推出的高性能 Wi-Fi + Bluetooth 5 (LE) MCU 芯片，搭载 Xtensa® 32 位 LX7 双核处理器，主频高达 240 MHz。相比前代 ESP32，S3 增加了向量指令集支持，在 AI 推理和信号处理方面有显著提升。
+
+本文将带你从零开始搭建 ESP32-S3 的开发环境。
+
+## 硬件准备
+
+在开始之前，确保你拥有以下硬件：
+
+- **ESP32-S3 开发板**（推荐 ESP32-S3-DevKitC-1）
+- **USB-C 数据线**（支持数据传输）
+- **面包板与杜邦线**（可选，用于扩展实验）
+
+## 开发环境搭建
+
+### 1. 安装 ESP-IDF
+
+ESP-IDF 是乐鑫官方的开发框架，支持 Windows、macOS 和 Linux。
+
+```bash
+# macOS 安装
+brew install cmake ninja dfu-util
+git clone --recursive https://github.com/espressif/esp-idf.git
+cd esp-idf
+./install.sh esp32s3
+```
+
+### 2. 配置环境变量
+
+```bash
+. $HOME/esp/esp-idf/export.sh
+```
+
+建议将上述命令添加到 `.zshrc` 或 `.bashrc` 中。
+
+### 3. 创建第一个项目
+
+```bash
+cp -r $IDF_PATH/examples/get-started/blink ~/esp32s3-blink
+cd ~/esp32s3-blink
+idf.py set-target esp32s3
+idf.py menuconfig
+```
+
+## 第一个程序：LED 闪烁
+
+```c
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "driver/gpio.h"
+
+#define BLINK_GPIO GPIO_NUM_48
+
+void app_main(void)
+{
+    gpio_reset_pin(BLINK_GPIO);
+    gpio_set_direction(BLINK_GPIO, GPIO_MODE_OUTPUT);
+
+    while (1) {
+        gpio_set_level(BLINK_GPIO, 1);
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        gpio_set_level(BLINK_GPIO, 0);
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    }
+}
+```
+
+## 编译与烧录
+
+```bash
+idf.py build
+idf.py -p /dev/cu.usbserial-* flash monitor
+```
+
+## 小结
+
+至此，你已经成功搭建了 ESP32-S3 的开发环境并运行了第一个程序。下一篇我们将深入探讨 FreeRTOS 任务调度与双核编程。

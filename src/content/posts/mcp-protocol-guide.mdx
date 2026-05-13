@@ -1,0 +1,78 @@
+---
+title: "从零理解 MCP 协议：将硬件接入 AI 框架的桥梁"
+description: "深入解读 Model Context Protocol (MCP) 协议的设计理念与实现细节，展示如何将 ESP32-S3 硬件通过 MCP 接入夏柔 AI 框架。"
+date: 2024-08-25
+category: ai
+tags: ["MCP", "AI框架", "协议设计", "夏柔AI", "硬件接入"]
+draft: false
+---
+
+## 什么是 MCP
+
+Model Context Protocol (MCP) 是一种开放协议，旨在标准化 AI 模型与外部工具、数据源之间的交互方式。它定义了统一的接口，使得不同的 AI 框架能够以一致的方式访问外部资源。
+
+## MCP 核心概念
+
+```json
+{
+  "mcp_version": "1.0",
+  "server_info": {
+    "name": "esp32-s3-sensor-server",
+    "version": "1.0.0"
+  },
+  "capabilities": {
+    "resources": true,
+    "tools": true,
+    "prompts": false
+  }
+}
+```
+
+### 三种核心能力
+
+1. **Resources（资源）**：暴露数据给 AI 模型，如传感器读数
+2. **Tools（工具）**：AI 可调用的操作，如控制 GPIO
+3. **Prompts（提示词）**：预定义的交互模板
+
+## 硬件端 MCP 服务器
+
+```python
+from mcp import Server, Tool
+
+server = Server("esp32-s3-device")
+
+@server.tool("read_temperature")
+async def read_temperature():
+    reading = await serial_client.query("TEMP?")
+    return {"temperature": reading, "unit": "celsius"}
+
+@server.tool("set_led")
+async def set_led(state: bool):
+    cmd = f"LED:{1 if state else 0}"
+    await serial_client.send(cmd)
+    return {"status": "ok", "state": state}
+
+server.start()
+```
+
+## 与夏柔 AI 框架集成
+
+```python
+from xiarou import AIAssistant
+from mcp_client import MCPClient
+
+client = MCPClient("ws://esp32s3.local:9000")
+assistant = AIAssistant(tools=client.get_tools())
+
+response = await assistant.chat("检查当前温度，如果超过30度就打开风扇")
+```
+
+## 实际应用场景
+
+- **智能家居**：传感器数据 → MCP → AI 决策 → 设备控制
+- **工业监测**：产线数据 → MCP → AI 分析 → 预警通知
+- **机器人控制**：状态反馈 → MCP → AI 规划 → 动作指令
+
+## 小结
+
+MCP 协议极大地简化了硬件与 AI 框架的集成复杂度。通过标准化的接口定义，嵌入式设备可以无缝融入 AI 工作流。

@@ -1,0 +1,98 @@
+---
+title: "夏柔 AI 框架 SOP 总结：从部署到监控的全流程实践"
+description: "系统化梳理夏柔 AI 框架的标准操作流程，涵盖模型部署、服务监控、异常回滚与性能调优的完整方案。"
+date: 2024-09-28
+category: ai
+tags: ["夏柔AI", "SOP", "Docker", "Kubernetes", "运维"]
+draft: false
+
+---
+
+## 背景
+
+在实习期间，我深度参与了夏柔 AI 框架的运维工作。本文将系统化总结框架的标准操作流程（SOP），为后续团队成员提供参考。
+
+## 模型部署流程
+
+### 1. 镜像构建
+
+```dockerfile
+FROM nvidia/cuda:12.1-runtime-ubuntu22.04
+
+RUN apt-get update && apt-get install -y python3.10
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY model/ /app/model/
+COPY server.py /app/
+
+CMD ["python3", "/app/server.py"]
+```
+
+### 2. Kubernetes 部署
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xiarou-inference
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: xiarou-inference
+  template:
+    metadata:
+      labels:
+        app: xiarou-inference
+    spec:
+      containers:
+      - name: inference
+        image: xiarou-inference:v2.1.0
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+        env:
+        - name: MODEL_PATH
+          value: /app/model/v2
+        ports:
+        - containerPort: 8000
+```
+
+## 监控体系
+
+```python
+import prometheus_client as prom
+
+REQUEST_COUNT = prom.Counter('requests_total', 'Total requests')
+REQUEST_LATENCY = prom.Histogram('request_latency_seconds', 'Request latency')
+GPU_MEMORY = prom.Gauge('gpu_memory_used_bytes', 'GPU memory used')
+
+@app.middleware("http")
+async def metrics_middleware(request, call_next):
+    REQUEST_COUNT.inc()
+    with REQUEST_LATENCY.time():
+        response = await call_next(request)
+    return response
+```
+
+## 回滚策略
+
+1. **金丝雀发布**：新版本先部署到 10% 的实例
+2. **监控观察**：观察 30 分钟内无异常
+3. **全量发布**：逐步扩展到 100%
+4. **快速回滚**：异常时通过 `kubectl rollout undo` 回滚
+
+## 告警规则
+
+| 指标 | 阈值 | 级别 |
+|------|------|------|
+| P99 延迟 > 500ms | 持续 5 分钟 | Warning |
+| GPU 利用率 < 20% | 持续 30 分钟 | Info |
+| 错误率 > 1% | 持续 2 分钟 | Critical |
+| 实例数 < 2 | 任意时刻 | Critical |
+
+## 小结
+
+标准化的 SOP 文档是保证 AI 服务稳定性的基石。通过自动化部署 + 全链路监控 + 快速回滚，可以大幅降低生产事故风险。

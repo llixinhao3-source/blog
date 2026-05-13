@@ -1,0 +1,74 @@
+---
+title: "Astro 群岛架构详解：零 JS 默认的水合策略"
+description: "深入解析 Astro 群岛架构的设计理念，理解 client:load、client:visible、client:idle 等水合指令的适用场景。"
+date: 2024-12-01
+category: guide
+tags: ["Astro", "群岛架构", "水合策略", "前端架构", "性能"]
+draft: false
+---
+
+## 什么是群岛架构
+
+群岛架构（Islands Architecture）是 Astro 的核心设计理念。它主张页面的大部分内容应该是纯静态 HTML，只在需要交互的地方引入 JavaScript "岛屿"。
+
+## 水合指令对比
+
+```astro
+---
+import InteractiveChart from '../components/InteractiveChart';
+---
+
+<!-- 页面加载时立即水合 -->
+<InteractiveChart client:load />
+
+<!-- 组件进入视口时才水合 -->
+<InteractiveChart client:visible />
+
+<!-- 浏览器空闲时水合 -->
+<InteractiveChart client:idle />
+
+<!-- 仅在客户端渲染，不水合 -->
+<InteractiveChart client:only="react" />
+
+<!-- 纯静态，不发送任何 JS -->
+<InteractiveChart />
+```
+
+## 实际场景选择
+
+| 场景 | 推荐指令 | 理由 |
+|------|---------|------|
+| 导航栏 | 纯静态 Astro | 使用 CSS + 少量内联 JS |
+| 统计数字动画 | client:visible | 用户看到时才加载 |
+| 评论区 | client:idle | 非关键功能，延迟加载 |
+| 实时数据面板 | client:load | 需要立即交互 |
+
+## 性能分析
+
+```
+页面 JS 大小对比：
+
+传统 SPA：      ████████████████████ 245KB
+Astro 默认：    ▯ (0KB)
++ 统计面板：     ███ 12KB (client:visible)
++ 标签云：       ██ 8KB (client:visible)
++ 目录导航：     ██ 6KB (client:visible)
+总计：           ███████ 26KB (减少 89%)
+```
+
+## 组件隔离
+
+```astro
+---
+// 每个岛屿独立水合，互不影响
+---
+<Header />                    <!-- 0KB JS -->
+<StatsPanel client:visible /> <!-- 12KB JS (独立加载) -->
+<ArticleList />               <!-- 0KB JS -->
+<TagCloud client:visible />   <!-- 8KB JS (独立加载) -->
+<Footer />                    <!-- 0KB JS -->
+```
+
+## 小结
+
+群岛架构让内容型站点回归本质——大多数内容不需要 JavaScript。合理使用水合指令可以在保持交互性的同时最大化性能。

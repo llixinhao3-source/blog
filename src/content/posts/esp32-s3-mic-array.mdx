@@ -1,0 +1,105 @@
+---
+title: "双麦克风阵列调优实战：I2S 音频采集与降噪处理"
+description: "基于 ESP32-S3 的 I2S 接口实现双麦克风阵列的音频采集，并探讨波束成形与降噪算法的嵌入式实现。"
+date: 2024-07-20
+category: hardware
+tags: ["ESP32-S3", "I2S", "麦克风阵列", "音频处理", "DSP"]
+draft: false
+---
+
+## 概述
+
+双麦克风阵列在语音识别、降噪通话等场景中有着广泛应用。ESP32-S3 的 I2S 外设支持多通道音频采集，为麦克风阵列的实现提供了硬件基础。
+
+## I2S 配置
+
+```c
+#include "driver/i2s_std.h"
+
+i2s_chan_handle_t rx_handle;
+
+void i2s_mic_init(void)
+{
+    i2s_chan_config_t chan_cfg = I2S_CHANNEL_DEFAULT_CONFIG(
+        I2S_NUM_0, I2S_ROLE_MASTER);
+
+    i2s_new_channel(&chan_cfg, NULL, &rx_handle);
+
+    i2s_std_config_t std_cfg = {
+        .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(16000),
+        .slot_cfg = I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG(
+            I2S_DATA_BIT_WIDTH_16BIT, I2S_SLOT_MODE_STEREO),
+        .gpio_cfg = {
+            .mclk = I2S_GPIO_UNUSED,
+            .bclk = GPIO_NUM_4,
+            .ws   = GPIO_NUM_5,
+            .din  = GPIO_NUM_6,
+        },
+    };
+
+    i2s_channel_init_std_mode(rx_handle, &std_cfg);
+    i2s_channel_enable(rx_handle);
+}
+```
+
+## 双通道数据读取
+
+```c
+#define BUFFER_SIZE 1024
+
+int16_t audio_buffer[BUFFER_SIZE * 2];
+
+void read_stereo_audio(void)
+{
+    size_t bytes_read;
+    i2s_channel_read(rx_handle, audio_buffer,
+                     sizeof(audio_buffer), &bytes_read, portMAX_DELAY);
+
+    // 分离左右声道
+    for (int i = 0; i < BUFFER_SIZE; i++) {
+        int16_t left = audio_buffer[i * 2];
+        int16_t right = audio_buffer[i * 2 + 1];
+        // 处理音频数据
+    }
+}
+```
+
+## 延迟求和波束成形
+
+```c
+void delay_and_sum_beamforming(int16_t *left, int16_t *right,
+                                int16_t *output, int len)
+{
+    int delay_samples = 2; // 根据麦克风间距调整
+
+    for (int i = delay_samples; i < len; i++) {
+        int32_t sum = (int32_t)left[i] + (int32_t)right[i - delay_samples];
+        output[i] = (int16_t)(sum / 2);
+    }
+}
+```
+
+## 频谱减法降噪
+
+一种经典的降噪算法，通过估计噪声频谱并从带噪信号中减去：
+
+```c
+void spectral_subtraction(float *spectrum, float *noise_estimate,
+                           int fft_size, float alpha)
+{
+    for (int i = 0; i < fft_size / 2 + 1; i++) {
+        float gain = spectrum[i] - alpha * noise_estimate[i];
+        spectrum[i] = gain > 0 ? gain : 0.001f;
+    }
+}
+```
+
+## 性能考量
+
+- ESP32-S3 的向量指令可加速 FFT 运算
+- 建议使用 ESP-DSP 库获得优化后的信号处理函数
+- 16kHz 采样率 + 16bit 量化在语音场景下足够
+
+## 小结
+
+ESP32-S3 配合 I2S 接口可以构建实用的双麦克风阵列系统。结合适当的降噪算法，能在嵌入式设备上实现令人满意的音频质量。

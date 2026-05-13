@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/home/ArticleCard.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('posts', ({ data }) => !data.draft);
+const publishedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout
+  title="文章列表"
+  description="浏览所有技术文章，涵盖嵌入式硬件、AI算法、CUDA学习与博客指南。"
+>
+  <section class="pt-28 pb-16 px-6">
+    <div class="max-w-3xl mx-auto">
+      <div class="glass-card !rounded-3xl p-6 sm:p-8 mb-8">
+        <h1 class="text-2xl font-bold tracking-tight mb-1" style="font-family: 'JetBrains Mono', monospace;">
+          文章列表
+        </h1>
+        <p class="text-sm text-text-muted">
+          共 {publishedPosts.length} 篇文章
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {publishedPosts.map((post) => (
+          <ArticleCard post={post} />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

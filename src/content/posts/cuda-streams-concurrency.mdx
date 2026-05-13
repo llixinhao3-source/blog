@@ -1,0 +1,107 @@
+---
+title: "CUDA 流与并发：多 Kernel 并行执行的艺术"
+description: "掌握 CUDA Stream 的使用方法，实现数据传输与 Kernel 执行的重叠，最大化 GPU 利用率。"
+date: 2024-11-05
+category: cuda
+tags: ["CUDA", "Stream", "并发", "异步", "性能优化"]
+draft: false
+---
+
+## 默认流的问题
+
+在 CUDA 中，如果不显式指定流，所有操作都在默认流（Stream 0）中串行执行。这意味着即使 GPU 有空闲资源，也无法并行处理多个任务。
+
+## 创建和使用流
+
+```cuda
+cudaStream_t stream1, stream2;
+cudaStreamCreate(&stream1);
+cudaStreamCreate(&stream2);
+
+// 在 stream1 中异步拷贝和计算
+cudaMemcpyAsync(d_a1, h_a1, bytes, cudaMemcpyHostToDevice, stream1);
+kernel<<<grid, block, 0, stream1>>>(d_a1, d_out1, n);
+cudaMemcpyAsync(h_out1, d_out1, bytes, cudaMemcpyDeviceToHost, stream1);
+
+// 在 stream2 中同时进行另一个任务
+cudaMemcpyAsync(d_a2, h_a2, bytes, cudaMemcpyHostToDevice, stream2);
+kernel<<<grid, block, 0, stream2>>>(d_a2, d_out2, n);
+cudaMemcpyAsync(h_out2, d_out2, bytes, cudaMemcpyDeviceToHost, stream2);
+
+cudaStreamSynchronize(stream1);
+cudaStreamSynchronize(stream2);
+
+cudaStreamDestroy(stream1);
+cudaStreamDestroy(stream2);
+```
+
+## 分页锁定内存
+
+```cuda
+float *h_data;
+cudaHostAlloc(&h_data, bytes, cudaHostAllocDefault);
+
+// 使用 h_data 进行异步传输
+
+cudaFreeHost(h_data);
+```
+
+分页锁定内存不会被操作系统换出，因此 GPU 可以通过 DMA 直接访问，实现真正的异步传输。
+
+## 流水线并行
+
+```cuda
+const int N_STREAMS = 4;
+cudaStream_t streams[N_STREAMS];
+
+for (int i = 0; i < N_STREAMS; i++) {
+    cudaStreamCreate(&streams[i]);
+}
+
+for (int i = 0; i < N_STREAMS; i++) {
+    int offset = i * chunk_size;
+
+    cudaMemcpyAsync(d_in + offset, h_in + offset,
+                    chunk_bytes, cudaMemcpyHostToDevice, streams[i]);
+    kernel<<<grid, block, 0, streams[i]>>>(d_in + offset,
+                                            d_out + offset, chunk_size);
+    cudaMemcpyAsync(h_out + offset, d_out + offset,
+                    chunk_bytes, cudaMemcpyDeviceToHost, streams[i]);
+}
+```
+
+## CUDA 事件
+
+```cuda
+cudaEvent_t start, stop;
+cudaEventCreate(&start);
+cudaEventCreate(&stop);
+
+cudaEventRecord(start, stream1);
+kernel<<<grid, block, 0, stream1>>>(d_in, d_out, n);
+cudaEventRecord(stop, stream1);
+
+cudaEventSynchronize(stop);
+
+float milliseconds = 0;
+cudaEventElapsedTime(&milliseconds, start, stop);
+printf("Kernel time: %.3f ms\n", milliseconds);
+```
+
+## 性能分析
+
+```
+串行执行：
+  [H2D][Kernel][D2H][H2D][Kernel][D2H]...
+  总时间 = N × (H2D + Kernel + D2H)
+
+流水线并行：
+  [H2D][Kernel][D2H]
+     [H2D][Kernel][D2H]
+        [H2D][Kernel][D2H]
+  总时间 ≈ H2D + Kernel + D2H + (N-1) × max(H2D, Kernel, D2H)
+```
+
+## 小结
+
+CUDA Stream 是实现 GPU 任务并行的关键工具。通过合理使用多流、分页锁定内存和事件同步，可以显著提升 GPU 利用率。

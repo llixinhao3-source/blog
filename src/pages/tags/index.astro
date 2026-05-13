@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TagCloud from '../../components/tags/TagCloud.tsx';
+import { getCollection } from 'astro:content';
+import { getCategoryLabel } from '../../utils/date';
+
+const posts = await getCollection('posts', ({ data }) => !data.draft);
+
+const tagMap = new Map<string, number>();
+const categoryMap = new Map<string, number>();
+
+posts.forEach((post) => {
+  const category = post.data.category;
+  categoryMap.set(category, (categoryMap.get(category) || 0) + 1);
+  post.data.tags.forEach((tag) => {
+    tagMap.set(tag, (tagMap.get(tag) || 0) + 1);
+  });
+});
+
+const tagItems = Array.from(tagMap.entries()).map(([name, count]) => ({ name, count }));
+const categories = Array.from(categoryMap.entries()).sort((a, b) => b[1] - a[1]);
+---
+
+<BaseLayout
+  title="标签与分类"
+  description="按分类和标签浏览所有技术文章，涵盖嵌入式硬件、AI算法、CUDA学习等内容。"
+>
+  <section class="pt-28 pb-16 px-6">
+    <div class="max-w-3xl mx-auto">
+
+      <div class="glass-card !rounded-3xl p-6 sm:p-8 mb-10 !scale-100">
+        <h1 class="text-2xl font-bold tracking-tight mb-2" style="font-family: 'JetBrains Mono', monospace;">
+          标签与分类
+        </h1>
+        <p class="text-sm text-text-muted">
+          {posts.length} 篇文章 · {tagItems.length} 个标签 · {categories.length} 个分类
+        </p>
+      </div>
+
+      <section class="mb-12">
+        <h2 class="text-sm font-semibold text-text-muted tracking-wider uppercase mb-4 px-1">分类</h2>
+        <div class="flex flex-wrap gap-3">
+          {categories.map(([cat, count]) => (
+            <a
+              href={`/tags/${cat}`}
+              class="glass-card !rounded-2xl px-5 py-3 flex items-center gap-2 !scale-100 hover:!scale-[1.03]"
+            >
+              <span class="text-sm text-text-secondary">{getCategoryLabel(cat)}</span>
+              <span class="text-xs text-text-muted tabular-nums" style="font-family: 'JetBrains Mono', monospace;">
+                {count}
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 class="text-sm font-semibold text-text-muted tracking-wider uppercase mb-4 px-1">标签云</h2>
+        <div class="glass-card !rounded-3xl p-8 !scale-100">
+          <TagCloud tags={tagItems} client:visible />
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>

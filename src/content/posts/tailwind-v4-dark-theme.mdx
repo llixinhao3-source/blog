@@ -1,0 +1,111 @@
+---
+title: "Tailwind CSS v4 新特性：深色主题定制的终极指南"
+description: "探索 Tailwind CSS v4 的全新 CSS 优先配置方式，利用 CSS 变量构建精致的深色主题设计系统。"
+date: 2024-12-15
+category: guide
+tags: ["Tailwind CSS", "CSS", "设计系统", "深色主题", "前端"]
+draft: false
+---
+
+## Tailwind v4 的变化
+
+Tailwind CSS v4 带来了根本性的变化——从 JavaScript 配置转向纯 CSS 配置。这使得主题定制更加灵活和直观。
+
+## CSS 优先的主题配置
+
+```css
+@import "tailwindcss";
+
+@theme {
+  --color-bg-primary: #0a0a0a;
+  --color-bg-secondary: #111111;
+  --color-bg-card: #161616;
+  --color-accent: #00ff41;
+  --color-accent-warm: #ffb347;
+  --color-text-primary: #e4e4e7;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #71717a;
+}
+```
+
+## 深色主题设计原则
+
+### 1. 避免纯黑背景
+
+```css
+/* ❌ 太刺眼 */
+--color-bg: #000000;
+
+/* ✅ 带微妙色调的深色 */
+--color-bg: #0a0a0a;
+```
+
+### 2. 文字对比度
+
+```css
+/* 主要文字：与背景对比度 > 7:1 */
+--color-text: #e4e4e7;
+
+/* 次要文字：对比度 > 4.5:1 */
+--color-text-secondary: #a1a1aa;
+
+/* 辅助文字：可用较低对比度 */
+--color-text-muted: #71717a;
+```
+
+### 3. 强调色选择
+
+深色主题中，荧光色系效果出众：
+
+```css
+/* 电光绿 */
+--color-accent: #00ff41;
+
+/* 暖琥珀（用于区分） */
+--color-accent-warm: #ffb347;
+```
+
+## 排版插件配置
+
+```css
+@plugin "@tailwindcss/typography";
+
+.prose-custom {
+  --tw-prose-body: var(--color-text-secondary);
+  --tw-prose-headings: var(--color-text-primary);
+  --tw-prose-links: var(--color-accent);
+  --tw-prose-code: var(--color-accent);
+  --tw-prose-pre-bg: var(--color-bg-card);
+}
+```
+
+## 实用工具类
+
+```css
+@layer components {
+  .nav-link {
+    position: relative;
+    color: var(--color-text-secondary);
+    transition: color 0.2s;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--color-accent);
+    transition: width 0.2s;
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+  }
+}
+```
+
+## 小结
+
+Tailwind CSS v4 的 CSS 优先配置方式让深色主题的定制变得异常简单。结合 CSS 变量和设计令牌，可以构建出高度一致的设计系统。

@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/projects/ProjectCard.astro';
+import { projects } from '../data/projects';
+
+const hardwareProjects = projects.filter((p) => p.category === 'hardware');
+const aiProjects = projects.filter((p) => p.category === 'ai');
+---
+
+<BaseLayout
+  title="项目展示"
+  description="深度展示 ESP32-S3 硬件项目与 AI 算法实践，记录从底层硬件到工业级 AI 部署的全栈工程能力。"
+>
+  <section class="pt-28 pb-16 px-6">
+    <div class="max-w-3xl mx-auto">
+
+      <div class="glass-card !rounded-3xl p-6 sm:p-8 mb-10 !scale-100">
+        <h1 class="text-2xl font-bold tracking-tight mb-2" style="font-family: 'JetBrains Mono', monospace;">
+          项目展示
+        </h1>
+        <p class="text-sm text-text-muted">
+          从嵌入式硬件到 AI 算法，每一个项目都是技术成长的见证
+        </p>
+      </div>
+
+      <section class="mb-16">
+        <h2 class="text-sm font-semibold text-accent-warm tracking-wider uppercase mb-5 px-1">
+          🔧 硬件专区
+        </h2>
+        <div class="space-y-4">
+          {hardwareProjects.map((project) => (
+            <ProjectCard project={project} />
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 class="text-sm font-semibold text-accent tracking-wider uppercase mb-5 px-1">
+          🧪 AI 实验室
+        </h2>
+        <div class="space-y-4">
+          {aiProjects.map((project) => (
+            <ProjectCard project={project} />
+          ))}
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
