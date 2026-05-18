@@ -3,24 +3,13 @@ name: Deploy Astro Blog
 on:
   push:
     branches: [main]
-    paths:
-      - 'src/content/posts/**'
-      - 'src/**/*.astro'
-      - 'src/**/*.tsx'
-      - 'src/**/*.ts'
-      - 'astro.config.mjs'
-      - 'package.json'
-      - 'tailwind.config.*'
-      - 'public/**'
   workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      pages: write
-      id-token: write
+      contents: write
 
     steps:
       - name: 检出代码
@@ -33,10 +22,13 @@ jobs:
           cache: 'npm'
 
       - name: 安装依赖
-        run: npm ci
+        run: npm install
 
       - name: 构建 Astro 博客
         run: npx astro build
+
+      - name: 添加 .nojekyll
+        run: touch dist/.nojekyll
 
       - name: 部署到 GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
