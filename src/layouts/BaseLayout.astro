@@ -1,7 +1,7 @@
 ---
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
-import Particles from '../components/Particles.astro';
+import BackgroundDust from '../components/ui/BackgroundDust.tsx';
 import CustomCursor from '../components/ui/CustomCursor.tsx';
 import '../styles/global.css';
 
@@ -39,7 +39,10 @@ const fullTitle = `${title} | Sevik's Blog`;
     <meta name="twitter:description" content={description} />
   </head>
   <body class="min-h-screen flex flex-col" style="cursor: none;">
-    <Particles />
+    <div class="mesh-orb-1" aria-hidden="true"></div>
+    <div class="mesh-orb-2" aria-hidden="true"></div>
+    <div class="mesh-orb-3" aria-hidden="true"></div>
+    <BackgroundDust client:load />
     <CustomCursor client:load />
     <Header />
     <main class="flex-1">

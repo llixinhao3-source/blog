@@ -1,0 +1,80 @@
+---
+import TechStackRadar from '../about/TechStackRadar.tsx';
+import TechStackCards from '../about/TechStackCards.tsx';
+import HardwareLab from '../about/HardwareLab.tsx';
+import HardwareZone from '../about/HardwareZone.tsx';
+import TypewriterTitle from '../about/TypewriterTitle.tsx';
+import SocialLinks from '../about/SocialLinks.astro';
+---
+
+<div class="max-w-4xl w-full mx-auto px-[8%] pb-12">
+
+  <section class="mb-10">
+    <div class="glass-card !rounded-3xl p-6 sm:p-8 !scale-100">
+      <div class="flex items-start gap-6 mb-5">
+        <div
+          class="w-16 h-16 rounded-full flex items-center justify-center text-xl flex-shrink-0"
+          style="font-family: 'JetBrains Mono', monospace; background: linear-gradient(135deg, #c084fc, #a78bfa); color: #fff;"
+        >
+          S
+        </div>
+        <div class="flex-1 min-w-0">
+          <h2 class="text-xl font-bold tracking-tight mb-1" style="font-family: 'JetBrains Mono', monospace;">
+            李心皓
+          </h2>
+          <div class="mb-2" style="min-height: 20px;">
+            <TypewriterTitle client:load />
+          </div>
+          <p class="text-sm text-text-secondary leading-relaxed mb-4">
+            专注 OpenClaw 应用落地与 AI Agent 全链路开发。从智能体调教到企业级 AI 工作流部署，每一步都是技术深度的积累。
+          </p>
+          <SocialLinks />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <div class="flex items-center gap-2 mb-5 px-1">
+      <span class="text-accent-purple text-lg">◈</span>
+      <h3 class="text-sm font-semibold text-text-muted tracking-wider uppercase">技能矩阵</h3>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="glass-card !rounded-3xl p-6 !scale-100 radar-container">
+        <TechStackRadar client:visible />
+        <div class="mt-4 pt-4" style="border-top: 1px solid rgba(192,132,252,0.1);">
+          <p class="text-xs text-text-secondary leading-relaxed">
+            <span class="text-accent-purple font-semibold">OpenClaw 应用落地</span> — 基于 ESP32-S3 构建的 AI Agent 硬件生态，从技能开发、Agent 编排到大模型网关，全链路贯通。
+          </p>
+        </div>
+      </div>
+      <div>
+        <TechStackCards client:visible />
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <HardwareLab client:visible />
+  </section>
+
+  <section class="mb-6">
+    <div class="flex items-center gap-2 mb-5 px-1">
+      <span class="text-accent-purple text-lg">🤖</span>
+      <h3 class="hover-target text-sm font-semibold text-text-muted tracking-wider uppercase">AI Agent 专区</h3>
+    </div>
+    <HardwareZone client:visible />
+  </section>
+
+</div>
+
+<style>
+  .radar-container {
+    animation: radarGrow 0.8s cubic-bezier(0.645, 0.045, 0.355, 1) both;
+    animation-delay: 0.3s;
+  }
+  @keyframes radarGrow {
+    from { opacity: 0; transform: scale(0.6); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+</style>

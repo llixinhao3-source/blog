@@ -1,0 +1,40 @@
+---
+import ProjectCard from '../projects/ProjectCard.astro';
+import { projects } from '../../data/projects';
+
+const hardwareProjects = projects.filter((p) => p.category === 'hardware');
+const aiProjects = projects.filter((p) => p.category === 'ai');
+---
+
+<div class="max-w-3xl mx-auto">
+  <div class="mb-8 text-center">
+    <h2 class="text-2xl font-bold tracking-tight mb-2" style="font-family: 'JetBrains Mono', monospace;">
+      项目展示
+    </h2>
+    <p class="text-sm text-text-muted">
+      从嵌入式硬件到 AI 算法，每一个项目都是技术成长的见证
+    </p>
+  </div>
+
+  <section class="mb-12">
+    <h3 class="text-sm font-semibold text-accent-warm tracking-wider uppercase mb-5 px-1">
+      🔧 硬件专区
+    </h3>
+    <div class="space-y-6">
+      {hardwareProjects.map((project) => (
+        <ProjectCard project={project} />
+      ))}
+    </div>
+  </section>
+
+  <section class="mb-8">
+    <h3 class="hover-target text-sm font-semibold text-accent tracking-wider uppercase mb-5 px-1">
+      🧪 AI 实验室
+    </h3>
+    <div class="space-y-6">
+      {aiProjects.map((project) => (
+        <ProjectCard project={project} />
+      ))}
+    </div>
+  </section>
+</div>

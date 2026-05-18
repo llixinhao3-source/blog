@@ -2,23 +2,33 @@
 import { NAV_ITEMS, SITE_CONFIG } from '../../data/site';
 
 const currentPath = Astro.url.pathname;
+const isHome = currentPath === '/';
 ---
 
 <header class="fixed top-3 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 w-[calc(100%-2rem)] max-w-3xl" id="site-header">
   <div class="glass-card !rounded-2xl px-6 h-14 flex items-center justify-between" id="header-inner">
-    <a href="/" class="text-base font-semibold tracking-tight text-text-primary hover:text-accent transition-colors">
+    <a href="/" class="hover-target text-base font-semibold tracking-tight text-text-primary hover:text-accent transition-colors" data-nav-section="home">
       {SITE_CONFIG.title}
     </a>
 
-    <nav class="hidden md:flex items-center gap-8">
+    <nav class="hidden md:flex items-center gap-6" id="main-nav">
       {NAV_ITEMS.map((item) => {
-        const isActive = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href));
-        return (
-          <a
-            href={item.href}
-            class={`nav-link text-sm font-medium tracking-wide ${isActive ? 'active' : ''}`}
+        const sectionId = item.href === '/' ? 'home' : item.href.replace('/', '');
+        const isActive = isHome ? false : currentPath === item.href || currentPath.startsWith(item.href + '/');
+        return isHome ? (
+          <button
+            data-nav-section={sectionId}
+            class="nav-link-section hover-target relative text-sm font-medium tracking-wide text-text-secondary hover:text-text-primary transition-colors py-1"
           >
             {item.label}
+          </button>
+        ) : (
+          <a
+            href={item.href}
+            class={`nav-link-section hover-target relative text-sm font-medium tracking-wide transition-colors py-1 ${isActive ? 'text-text-primary' : 'text-text-secondary hover:text-text-primary'}`}
+          >
+            {item.label}
+            {isActive && <span class="nav-underline" style="position:absolute;bottom:-2px;left:0;right:0;height:2px;background:linear-gradient(90deg,#c084fc,#a78bfa);border-radius:1px;" />}
           </a>
         );
       })}
@@ -40,11 +50,19 @@ const currentPath = Astro.url.pathname;
   >
     <nav class="flex flex-col gap-1">
       {NAV_ITEMS.map((item) => {
-        const isActive = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href));
-        return (
+        const sectionId = item.href === '/' ? 'home' : item.href.replace('/', '');
+        const isActive = !isHome && (currentPath === item.href || currentPath.startsWith(item.href + '/'));
+        return isHome ? (
+          <button
+            data-nav-section={sectionId}
+            class="mobile-nav-link text-sm font-medium py-2.5 px-3 rounded-xl transition-all text-text-secondary hover:text-text-primary hover:bg-white/5"
+          >
+            {item.label}
+          </button>
+        ) : (
           <a
             href={item.href}
-            class={`text-sm font-medium py-2.5 px-3 rounded-xl transition-all ${isActive ? 'text-accent bg-accent/10' : 'text-text-secondary hover:text-text-primary hover:bg-white/5'}`}
+            class={`mobile-nav-link text-sm font-medium py-2.5 px-3 rounded-xl transition-all ${isActive ? 'text-accent bg-accent/10' : 'text-text-secondary hover:text-text-primary hover:bg-white/5'}`}
           >
             {item.label}
           </a>
@@ -54,29 +72,75 @@ const currentPath = Astro.url.pathname;
   </div>
 </header>
 
-<script>
-  const header = document.getElementById('site-header');
-  const mobileBtn = document.getElementById('mobile-menu-btn');
-  const mobileMenu = document.getElementById('mobile-menu');
-  const headerInner = document.getElementById('header-inner');
+{isHome && (
+  <script>
+    const headerInner = document.getElementById('header-inner');
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
 
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 40) {
-      headerInner?.classList.add('!bg-slate-800/70');
-    } else {
-      headerInner?.classList.remove('!bg-slate-800/70');
-    }
-  });
+    function updateActiveNav(sectionId: string) {
+      document.querySelectorAll('.nav-link-section').forEach((el) => {
+        const btn = el as HTMLElement;
+        if (btn.dataset.navSection === sectionId) {
+          btn.classList.add('active');
+          btn.style.color = 'var(--color-text-primary)';
+          if (!btn.querySelector('.nav-underline')) {
+            const underline = document.createElement('span');
+            underline.className = 'nav-underline';
+            underline.style.cssText = 'position:absolute;bottom:-2px;left:0;right:0;height:2px;background:linear-gradient(90deg,#c084fc,#a78bfa);border-radius:1px;transform:scaleX(1);transition:transform 0.4s cubic-bezier(0.23,1,0.32,1);';
+            btn.appendChild(underline);
+          }
+        } else {
+          btn.classList.remove('active');
+          btn.style.color = '';
+          const existing = btn.querySelector('.nav-underline');
+          if (existing) existing.remove();
+        }
+      });
 
-  mobileBtn?.addEventListener('click', () => {
-    mobileMenu?.classList.toggle('hidden');
-    const spans = mobileBtn.querySelectorAll('span');
-    if (!mobileMenu?.classList.contains('hidden')) {
-      spans[0].style.transform = 'rotate(45deg) translateY(5px)';
-      spans[1].style.transform = 'rotate(-45deg) translateY(-5px)';
-    } else {
-      spans[0].style.transform = '';
-      spans[1].style.transform = '';
+      document.querySelectorAll('.mobile-nav-link').forEach((el) => {
+        const btn = el as HTMLElement;
+        if (btn.dataset.navSection === sectionId) {
+          btn.classList.add('text-accent', 'bg-accent/10');
+          btn.classList.remove('text-text-secondary');
+        } else {
+          btn.classList.remove('text-accent', 'bg-accent/10');
+          btn.classList.add('text-text-secondary');
+        }
+      });
     }
-  });
-</script>
+
+    document.querySelectorAll('[data-nav-section]').forEach((el) => {
+      el.addEventListener('click', () => {
+        const sectionId = (el as HTMLElement).dataset.navSection;
+        if (sectionId) {
+          window.dispatchEvent(new CustomEvent('navigate-section', { detail: sectionId }));
+          updateActiveNav(sectionId);
+          if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
+            const spans = mobileBtn?.querySelectorAll('span');
+            if (spans) { spans[0].style.transform = ''; spans[1].style.transform = ''; }
+          }
+        }
+      });
+    });
+
+    window.addEventListener('section-changed', ((e: CustomEvent) => {
+      updateActiveNav(e.detail.id);
+    }) as EventListener);
+
+    updateActiveNav('home');
+
+    mobileBtn?.addEventListener('click', () => {
+      mobileMenu?.classList.toggle('hidden');
+      const spans = mobileBtn.querySelectorAll('span');
+      if (!mobileMenu?.classList.contains('hidden')) {
+        spans[0].style.transform = 'rotate(45deg) translateY(5px)';
+        spans[1].style.transform = 'rotate(-45deg) translateY(-5px)';
+      } else {
+        spans[0].style.transform = '';
+        spans[1].style.transform = '';
+      }
+    });
+  </script>
+)}

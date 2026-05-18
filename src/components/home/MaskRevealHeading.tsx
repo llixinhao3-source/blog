@@ -67,18 +67,52 @@ export default function MaskRevealHeading() {
         hi，我是李心皓
       </div>
 
-      {/* Layer 1 (base) — "hi，我是sevik" semi-transparent */}
+      {/* Layer 1 (base) — "hi，我是sevik" breathing glow background-clip */}
       <div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         style={{ whiteSpace: 'nowrap', fontSize: 'inherit', lineHeight: 1.2 }}
       >
         <span
-          className="font-serif font-bold tracking-wider"
-          style={{ fontSize: 'inherit', color: 'rgba(255,255,255,0.25)' }}
+          className="font-serif font-bold tracking-wider breathe-text"
+          style={{
+            fontSize: 'inherit',
+            background: 'linear-gradient(135deg, #c084fc, #a78bfa, #e879f9, #c084fc)',
+            backgroundSize: '300% 300%',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            filter: 'brightness(0.8)',
+            animation: 'breatheShift 4s ease-in-out infinite',
+          }}
         >
           hi，我是sevik
         </span>
       </div>
+
+      <style>{`
+        @keyframes breatheShift {
+          0%, 100% {
+            background-position: 0% 50%;
+            filter: brightness(0.7);
+            opacity: 0.35;
+          }
+          25% {
+            background-position: 100% 0%;
+            filter: brightness(1.0);
+            opacity: 0.5;
+          }
+          50% {
+            background-position: 100% 100%;
+            filter: brightness(1.2);
+            opacity: 0.55;
+          }
+          75% {
+            background-position: 0% 100%;
+            filter: brightness(0.9);
+            opacity: 0.45;
+          }
+        }
+      `}</style>
 
       {/* Layer 2 (overlay) — "hi，我是李心皓" clipped from right */}
       <div
@@ -97,7 +131,7 @@ export default function MaskRevealHeading() {
           style={{
             fontSize: 'inherit',
             color: '#ffffff',
-            textShadow: '0 0 50px rgba(56,189,248,0.5), 0 0 100px rgba(56,189,248,0.2)',
+            textShadow: '0 0 50px rgba(192,132,252,0.5), 0 0 100px rgba(167,139,250,0.25)',
           }}
         >
           hi，我是李心皓
@@ -112,10 +146,26 @@ export default function MaskRevealHeading() {
           left: edgeX,
           opacity: edgeX > 1 ? 1 : 0,
           background:
-            'linear-gradient(to bottom, transparent, rgba(56,189,248,0.6), rgba(56,189,248,0.9), rgba(56,189,248,0.6), transparent)',
-          boxShadow: '0 0 16px rgba(56,189,248,0.5), 0 0 32px rgba(56,189,248,0.2)',
+            'linear-gradient(to bottom, transparent, rgba(192,132,252,0.6), rgba(192,132,252,0.9), rgba(167,139,250,0.6), transparent)',
+          boxShadow: '0 0 16px rgba(192,132,252,0.5), 0 0 32px rgba(167,139,250,0.2)',
         }}
       />
+
+      <style>{`
+        @keyframes breathingShimmer {
+          0%, 100% {
+            background-position: 200% center;
+            filter: brightness(1) drop-shadow(0 0 8px rgba(192,132,252,0.3));
+          }
+          50% {
+            background-position: -100% center;
+            filter: brightness(1.25) drop-shadow(0 0 18px rgba(192,132,252,0.55));
+          }
+        }
+        .breathing-glow-text {
+          animation: breathingShimmer 3.5s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 }

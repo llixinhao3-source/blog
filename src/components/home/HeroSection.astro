@@ -17,60 +17,37 @@ interface PostItem {
 const { posts } = Astro.props as { posts: PostItem[] };
 ---
 
-<section class="relative overflow-hidden" style="height: 750px;">
-  <!-- 3D 粒子全幅背景 -->
+<div class="relative overflow-hidden h-screen">
   <div class="absolute inset-0">
     <ArmExplodedView client:load />
   </div>
 
-  <!-- 全部内容叠加在粒子层上方 -->
   <div class="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6">
     <div class="w-full max-w-[1200px] flex flex-col items-center gap-5 relative">
 
-      <!-- 桌面：PersonalIntro 左 + MusicPlayer 右，等高水平 -->
       <div class="hidden lg:flex items-start justify-between w-full absolute top-24 left-0 right-0 max-w-[1200px] mx-auto px-4">
-        <div class="w-52 flex-shrink-0">
+        <div class="w-52 flex-shrink-0" style="perspective: 1000px;">
           <PersonalIntro client:load />
         </div>
-        <div class="w-52 flex-shrink-0">
+        <div class="w-52 flex-shrink-0" style="perspective: 1000px;">
           <MusicPlayer client:load />
         </div>
       </div>
 
-      <!-- 身份标签 -->
-      <div class="flex justify-center gap-3 sm:gap-4">
-        <span class="inline-block px-4 py-1.5 sm:px-5 sm:py-2 text-sm sm:text-base rounded-full border border-sky-400/30 text-sky-300 bg-sky-400/10 font-medium">
-          OpenClaw 应用工程师
-        </span>
-        <span class="inline-block px-4 py-1.5 sm:px-5 sm:py-2 text-sm sm:text-base rounded-full border border-amber-400/30 text-amber-300 bg-amber-400/10 font-medium">
-          AI Agent 开发工程师
-        </span>
-      </div>
-
-      <!-- 搜索框 -->
-      <div class="w-full flex justify-center">
+      <div class="w-full flex justify-center" style="margin-top: 2vh;">
         <div class="w-full max-w-lg">
           <SearchBox posts={posts} client:load />
         </div>
       </div>
 
-      <!-- 自我介绍文字 -->
-      <div class="text-center px-6 mt-2">
+      <div class="text-center px-6" style="margin-top: 3vh;">
         <MaskRevealHeading client:load />
         <p class="text-base sm:text-lg text-text-secondary/80 max-w-md mx-auto leading-relaxed mt-4"
            style="text-shadow: 0 0 25px rgba(15,23,42,0.6);">
           OpenClaw 应用工程师 &amp; AI Agent 开发工程师
         </p>
-        <p class="text-xs sm:text-sm text-text-muted/60 max-w-lg mx-auto mt-4 leading-relaxed"
-           style="text-shadow: 0 0 15px rgba(15,23,42,0.4);">
-          专注 OpenClaw 应用落地与 AI Agent 全链路开发，<br/>
-          深耕从智能体调教、Prompt 工程、工具链集成到企业级 AI 工作流部署的全栈探索，<br/>
-          沉淀从 OpenClaw 技能开发、大模型对接至业务场景落地的技术积累，<br/>
-          每一次调试与迭代，都是通往专业 AI 工程师的扎实脚印。
-        </p>
       </div>
 
-      <!-- 移动端 PersonalIntro + MusicPlayer -->
       <div class="lg:hidden flex flex-col items-center gap-3 mt-4 w-full">
         <PersonalIntro client:load />
         <MusicPlayer client:load />
@@ -78,4 +55,31 @@ const { posts } = Astro.props as { posts: PostItem[] };
 
     </div>
   </div>
-</section>
+
+  <button
+    id="scroll-next-btn"
+    class="hover-target absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1 cursor-pointer group"
+    aria-label="下一页"
+  >
+    <span class="text-xs text-text-muted/50 group-hover:text-text-secondary transition-colors">探索更多</span>
+    <svg class="breath-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: rgba(192,132,252,0.5);">
+      <path d="M12 5v14M5 12l7 7 7-7"/>
+    </svg>
+  </button>
+
+  <style>
+    .breath-arrow {
+      animation: breathBounce 2.5s ease-in-out infinite;
+    }
+    @keyframes breathBounce {
+      0%, 100% { transform: translateY(0); opacity: 0.5; }
+      50% { transform: translateY(8px); opacity: 0.9; }
+    }
+  </style>
+</div>
+
+<script>
+  document.getElementById('scroll-next-btn')?.addEventListener('click', () => {
+    window.dispatchEvent(new CustomEvent('navigate-section', { detail: 'articles' }));
+  });
+</script>

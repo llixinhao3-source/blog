@@ -13,7 +13,15 @@ const { title, description, date, category, tags } = post.data;
 
 <a
   href={`/posts/${post.id}`}
-  class="group glass-card !rounded-2xl p-5 block"
+  class="hover-target article-card group block !rounded-2xl p-5"
+  style="
+    background: rgba(30, 41, 59, 0.45);
+    backdrop-filter: blur(20px) saturate(120%);
+    -webkit-backdrop-filter: blur(20px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 24px -2px rgba(0,0,0,0.35), 0 16px 48px -8px rgba(0,0,0,0.4), inset 0 0.5px 0 rgba(255,255,255,0.04);
+    transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
+  "
 >
   <div class="flex items-center gap-3 mb-3">
     <span class="text-xs text-text-muted tabular-nums" style="font-family: 'JetBrains Mono', monospace;">
@@ -22,7 +30,7 @@ const { title, description, date, category, tags } = post.data;
     <Badge text={getCategoryLabel(category)} />
   </div>
 
-  <h3 class="text-base font-semibold text-text-primary group-hover:text-accent transition-colors mb-2 leading-snug">
+  <h3 class="hover-target text-base font-semibold text-text-primary group-hover:text-accent-purple transition-colors mb-2 leading-snug">
     {title}
   </h3>
 
@@ -32,9 +40,21 @@ const { title, description, date, category, tags } = post.data;
 
   <div class="flex flex-wrap gap-1.5">
     {tags.slice(0, 4).map((tag) => (
-      <span class="text-xs text-text-muted hover:text-accent transition-colors">
+      <span class="text-xs text-text-muted hover:text-accent-purple transition-colors">
         #{tag}
       </span>
     ))}
   </div>
 </a>
+
+<style>
+  .article-card:hover {
+    transform: translateY(-4px) scale(1.01);
+    border-color: rgba(192, 132, 252, 0.2) !important;
+    box-shadow:
+      0 8px 32px -4px rgba(0,0,0,0.4),
+      0 20px 60px -12px rgba(0,0,0,0.5),
+      0 0 40px -8px rgba(192,132,252,0.12),
+      inset 0 0.5px 0 rgba(255,255,255,0.06) !important;
+  }
+</style>

@@ -12,6 +12,10 @@ const postsCollection = defineCollection({
     tags: z.array(z.string()),
     image: z.string().optional(),
     draft: z.boolean().default(false),
+    music_id: z.string().optional(),
+    golden_quote: z.string().optional(),
+    scene_theme: z.enum(['cosmic', 'aurora', 'ember', 'forest', 'void']).optional(),
+    card_rarity: z.enum(['common', 'rare', 'epic']).optional(),
   }),
 });
 

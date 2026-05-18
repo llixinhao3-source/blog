@@ -67,7 +67,7 @@ export default function ArmExplodedView() {
     camera.position.set(0, 0, 7.5);
     camera.lookAt(0, 0, 0);
 
-    const ambient = new THREE.AmbientLight('#38bdf8', 0.3);
+    const ambient = new THREE.AmbientLight('#b4a0e0', 0.25);
     scene.add(ambient);
 
     const allParticles: ParticleData[] = [];
@@ -86,10 +86,10 @@ export default function ArmExplodedView() {
       allParticles.push({ x: ox, y: oy, z: oz, ox, oy, oz, vx: 0, vy: 0, vz: 0 });
     }
 
-    // ---- Background particles: Gaussian density (dense center, sparse edges) ----
-    const bgCount = 28000;
+    // ---- Background particles: uniform full-screen scatter with depth parallax ----
+    const bgCount = 8000;
     const camZ = 7.5;
-    const zMin = -3.0, zMax = 3.0;
+    const zMin = -4.0, zMax = 4.0;
     const halfVFov = (38 / 2) * Math.PI / 180;
     const tanHalfVFov = Math.tan(halfVFov);
     const tanHalfHFov = tanHalfVFov * camera.aspect;
@@ -99,16 +99,7 @@ export default function ArmExplodedView() {
       const halfW = dist * tanHalfHFov;
       const halfH = dist * tanHalfVFov;
 
-      // Gaussian-distributed X: dense center, sparse edges
-      let gaussX: number;
-      do {
-        // Box-Muller: mean=0, sigma = halfW/2.5
-        const u1 = Math.random() || 1e-6;
-        const u2 = Math.random();
-        gaussX = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2) * (halfW / 2.5);
-      } while (Math.abs(gaussX) > halfW);
-
-      const ox = gaussX;
+      const ox = (Math.random() - 0.5) * 2 * halfW;
       const oy = (Math.random() - 0.5) * 2 * halfH;
       allParticles.push({ x: ox, y: oy, z: oz, ox, oy, oz, vx: 0, vy: 0, vz: 0 });
     }
@@ -117,8 +108,8 @@ export default function ArmExplodedView() {
     const textN = textPixels.length;
 
     const textColors = [
-      new THREE.Color('#ff7eb3'), new THREE.Color('#ff65a3'), new THREE.Color('#d8b4fe'),
-      new THREE.Color('#c084fc'), new THREE.Color('#ffb3d9'), new THREE.Color('#e9b8ff'),
+      new THREE.Color('#c084fc'), new THREE.Color('#a78bfa'), new THREE.Color('#e879f9'),
+      new THREE.Color('#d8b4fe'), new THREE.Color('#f0abfc'), new THREE.Color('#c4b5fd'),
     ];
 
     // ---- Heart-shaped alpha texture for particles ----
@@ -141,7 +132,7 @@ export default function ArmExplodedView() {
 
     // Glow ring
     const ringGeo = new THREE.TorusGeometry(2.4, 0.008, 8, 160);
-    const ringMat = new THREE.MeshBasicMaterial({ color: '#38bdf8', transparent: true, opacity: 0.08 });
+    const ringMat = new THREE.MeshBasicMaterial({ color: '#c084fc', transparent: true, opacity: 0.06 });
     const glowRing = new THREE.Mesh(ringGeo, ringMat);
     glowRing.rotation.x = Math.PI / 2;
     scene.add(glowRing);
@@ -204,30 +195,31 @@ export default function ArmExplodedView() {
       alphaMap: heartTexture,
       alphaTest: 0.3,
       vertexColors: true,
-      blending: THREE.NormalBlending,
+      blending: THREE.AdditiveBlending,
       depthWrite: false,
       transparent: true,
-      opacity: 0.95,
+      opacity: 0.72,
       sizeAttenuation: true,
     });
     const textPoints = new THREE.Points(textGeo, textMat);
     scene.add(textPoints);
 
-    // Background particles — smaller blue dots
+    // Background particles — smaller dots, purple-blue mixed palette
     const bgN = N - textN;
     const bgPositions = new Float32Array(bgN * 3);
     const bgColorsArr = new Float32Array(bgN * 3);
-    const bgColorLight = new THREE.Color('#93c5fd');
-    const bgColorDim = new THREE.Color('#60a5fa');
+    const bgColors = [
+      new THREE.Color('#93c5fd'), new THREE.Color('#a5b4fc'), new THREE.Color('#c4b5fd'),
+      new THREE.Color('#d8b4fe'), new THREE.Color('#bac8ff'), new THREE.Color('#a78bfa'),
+    ];
 
     for (let i = textN; i < N; i++) {
       const j = i - textN;
       bgPositions[j * 3] = allParticles[i].x;
       bgPositions[j * 3 + 1] = allParticles[i].y;
       bgPositions[j * 3 + 2] = allParticles[i].z;
-      const t = Math.abs(allParticles[i].ox) / 5;
-      const c = bgColorLight.clone().lerp(bgColorDim, Math.min(t, 1))
-        .offsetHSL(0, 0, (Math.random() - 0.5) * 0.15);
+      const c = bgColors[Math.floor(Math.random() * bgColors.length)].clone()
+        .offsetHSL(0, 0, (Math.random() - 0.5) * 0.12);
       bgColorsArr[j * 3] = c.r;
       bgColorsArr[j * 3 + 1] = c.g;
       bgColorsArr[j * 3 + 2] = c.b;
@@ -238,15 +230,15 @@ export default function ArmExplodedView() {
     bgGeo.setAttribute('color', new THREE.BufferAttribute(bgColorsArr, 3));
 
     const bgMat = new THREE.PointsMaterial({
-      size: 0.04,
+      size: 0.05,
       map: heartTexture,
       alphaMap: heartTexture,
       alphaTest: 0.3,
       vertexColors: true,
-      blending: THREE.NormalBlending,
+      blending: THREE.AdditiveBlending,
       depthWrite: false,
       transparent: true,
-      opacity: 0.6,
+      opacity: 0.50,
       sizeAttenuation: true,
     });
     const bgPoints = new THREE.Points(bgGeo, bgMat);
@@ -264,7 +256,7 @@ export default function ArmExplodedView() {
       const dt = Math.min(clock.getDelta(), 0.1);
       const { rotSpeed: rs, diffusion: df, particleSize: ps } = paramsRef.current;
 
-      const rotAngle = t * 0.35 * rs;
+      const rotAngle = t * 0.22 * rs;
       const cosA = Math.cos(rotAngle);
       const sinA = Math.sin(rotAngle);
 
@@ -274,14 +266,14 @@ export default function ArmExplodedView() {
       const rawX = mouseOnPlane ? mouseOnPlane.x : -999;
       const rawY = mouseOnPlane ? mouseOnPlane.y : -999;
 
-      // lerp mouse position to match CustomCursor character lag
-      smoothMouse.x += (rawX - smoothMouse.x) * 0.35;
-      smoothMouse.y += (rawY - smoothMouse.y) * 0.35;
+      // lerp mouse position to match CustomCursor character lag (slower, more viscous)
+      smoothMouse.x += (rawX - smoothMouse.x) * 0.25;
+      smoothMouse.y += (rawY - smoothMouse.y) * 0.25;
       const mx = smoothMouse.x;
       const my = smoothMouse.y;
 
-      const influenceRadius = 2.0 * df;
-      const force = 2.5 * df;
+      const influenceRadius = 1.8 * df;
+      const force = 1.8 * df;
 
       for (let i = 0; i < N; i++) {
         const p = allParticles[i];
@@ -335,8 +327,8 @@ export default function ArmExplodedView() {
       const ringAlpha = 0.06 + Math.sin(t * 1.5) * 0.04;
       (glowRing.material as THREE.MeshBasicMaterial).opacity = ringAlpha;
 
-      camera.position.x = Math.sin(t * 0.12) * 0.3;
-      camera.position.y = Math.cos(t * 0.15) * 0.15;
+      camera.position.x = smoothMouse.x * 0.15;
+      camera.position.y = smoothMouse.y * 0.1 + Math.cos(t * 0.15) * 0.1;
       camera.lookAt(0, 0, 0);
 
       renderer.render(scene, camera);

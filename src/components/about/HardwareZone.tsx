@@ -38,7 +38,7 @@ export default function HardwareZone() {
             viewport={{ once: true }}
             transition={{ delay: i * 0.1, duration: 0.4 }}
           >
-            <h3 className="text-sm font-medium text-text-primary mb-2">{f.title}</h3>
+            <h3 className="hover-target text-sm font-medium text-text-primary mb-2">{f.title}</h3>
             <p className="text-xs text-text-secondary leading-relaxed mb-3">{f.desc}</p>
             <div className="flex flex-wrap gap-1">
               {f.tags.map((t) => <span key={t} className="text-[10px] text-text-muted bg-white/5 px-1.5 py-0.5 rounded">{t}</span>)}
@@ -48,7 +48,7 @@ export default function HardwareZone() {
       </div>
 
       <div className="mt-5 pt-4 border-t border-white/10">
-        <a href="/projects" className="text-xs text-accent hover:opacity-80 transition-colors inline-flex items-center gap-1">
+        <a href="/projects" className="hover-target text-xs text-accent hover:opacity-80 transition-colors inline-flex items-center gap-1">
           查看完整项目详情 →
         </a>
       </div>

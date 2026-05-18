@@ -4,7 +4,9 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://sevik.me',
+  site: 'https://llixinhao3-source.github.io',
+  base: '/blog',
+  output: 'static',
   integrations: [
     mdx(),
     react(),
