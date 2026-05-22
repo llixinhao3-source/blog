@@ -9,10 +9,11 @@ interface Props {
 
 const { post } = Astro.props;
 const { title, description, date, category, tags } = post.data;
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <a
-  href={`/posts/${post.id}`}
+  href={`${baseUrl}/posts/${post.id}`}
   class="hover-target article-card group block !rounded-2xl p-5"
   style="
     background: rgba(30, 41, 59, 0.45);

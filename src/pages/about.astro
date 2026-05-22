@@ -5,6 +5,8 @@ import CareerTimeline from '../components/about/CareerTimeline.tsx';
 import ExpandableProjectCards from '../components/about/ExpandableProjectCard.tsx';
 import HardwareZone from '../components/about/HardwareZone.tsx';
 import SocialLinks from '../components/about/SocialLinks.astro';
+
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <BaseLayout
@@ -87,7 +89,7 @@ import SocialLinks from '../components/about/SocialLinks.astro';
 
       <!-- Openclaw -->
       <section class="mb-12">
-        <HardwareZone client:visible />
+        <HardwareZone client:visible baseUrl={baseUrl} />
       </section>
 
       <!-- 知识库 -->
@@ -96,7 +98,7 @@ import SocialLinks from '../components/about/SocialLinks.astro';
           <p class="text-sm text-text-secondary mb-3">
             对 OpenClaw 应用落地与 AI Agent 全链路开发的深度思考，收录于本博客知识库
           </p>
-          <a href="/posts" class="hover-target inline-flex items-center gap-2 text-sm text-accent hover:opacity-80 transition-colors">
+          <a href={`${baseUrl}/posts`} class="hover-target inline-flex items-center gap-2 text-sm text-accent hover:opacity-80 transition-colors">
             浏览全部 14 篇文章 →
           </a>
         </div>

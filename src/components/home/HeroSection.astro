@@ -5,6 +5,8 @@ import PersonalIntro from './PersonalIntro.tsx';
 import SearchBox from './SearchBox.tsx';
 import MaskRevealHeading from './MaskRevealHeading.tsx';
 
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 interface PostItem {
   slug: string;
   title: string;
@@ -36,7 +38,7 @@ const { posts } = Astro.props as { posts: PostItem[] };
 
       <div class="w-full flex justify-center" style="margin-top: 2vh;">
         <div class="w-full max-w-lg">
-          <SearchBox posts={posts} client:load />
+          <SearchBox posts={posts} client:load baseUrl={baseUrl} />
         </div>
       </div>
 

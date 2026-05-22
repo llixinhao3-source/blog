@@ -1,13 +1,14 @@
 ---
 import { NAV_ITEMS, SITE_CONFIG } from '../../data/site';
 
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 const currentPath = Astro.url.pathname;
-const isHome = currentPath === '/';
+const isHome = currentPath === '/' || currentPath === baseUrl || currentPath === baseUrl + '/';
 ---
 
 <header class="fixed top-3 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 w-[calc(100%-2rem)] max-w-3xl" id="site-header">
   <div class="glass-card !rounded-2xl px-6 h-14 flex items-center justify-between" id="header-inner">
-    <a href="/" class="hover-target text-base font-semibold tracking-tight text-text-primary hover:text-accent transition-colors" data-nav-section="home">
+    <a href={baseUrl || '/'} class="hover-target text-base font-semibold tracking-tight text-text-primary hover:text-accent transition-colors" data-nav-section="home">
       {SITE_CONFIG.title}
     </a>
 
@@ -15,6 +16,7 @@ const isHome = currentPath === '/';
       {NAV_ITEMS.map((item) => {
         const sectionId = item.href === '/' ? 'home' : item.href.replace('/', '');
         const isActive = isHome ? false : currentPath === item.href || currentPath.startsWith(item.href + '/');
+        const fullHref = item.href === '/' && baseUrl ? baseUrl : baseUrl + item.href;
         return isHome ? (
           <button
             data-nav-section={sectionId}
@@ -24,7 +26,7 @@ const isHome = currentPath === '/';
           </button>
         ) : (
           <a
-            href={item.href}
+            href={fullHref}
             class={`nav-link-section hover-target relative text-sm font-medium tracking-wide transition-colors py-1 ${isActive ? 'text-text-primary' : 'text-text-secondary hover:text-text-primary'}`}
           >
             {item.label}
@@ -52,6 +54,7 @@ const isHome = currentPath === '/';
       {NAV_ITEMS.map((item) => {
         const sectionId = item.href === '/' ? 'home' : item.href.replace('/', '');
         const isActive = !isHome && (currentPath === item.href || currentPath.startsWith(item.href + '/'));
+        const fullHref = item.href === '/' && baseUrl ? baseUrl : baseUrl + item.href;
         return isHome ? (
           <button
             data-nav-section={sectionId}
@@ -61,7 +64,7 @@ const isHome = currentPath === '/';
           </button>
         ) : (
           <a
-            href={item.href}
+            href={fullHref}
             class={`mobile-nav-link text-sm font-medium py-2.5 px-3 rounded-xl transition-all ${isActive ? 'text-accent bg-accent/10' : 'text-text-secondary hover:text-text-primary hover:bg-white/5'}`}
           >
             {item.label}

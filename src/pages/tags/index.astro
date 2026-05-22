@@ -4,6 +4,8 @@ import TagCloud from '../../components/tags/TagCloud.tsx';
 import { getCollection } from 'astro:content';
 import { getCategoryLabel } from '../../utils/date';
 
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 const posts = await getCollection('posts', ({ data }) => !data.draft);
 
 const tagMap = new Map<string, number>();
@@ -42,7 +44,7 @@ const categories = Array.from(categoryMap.entries()).sort((a, b) => b[1] - a[1])
         <div class="flex flex-wrap gap-3">
           {categories.map(([cat, count]) => (
             <a
-              href={`/tags/${cat}`}
+              href={`${baseUrl}/tags/${cat}`}
               class="glass-card !rounded-2xl px-5 py-3 flex items-center gap-2 !scale-100 hover:!scale-[1.03]"
             >
               <span class="text-sm text-text-secondary">{getCategoryLabel(cat)}</span>
@@ -57,7 +59,7 @@ const categories = Array.from(categoryMap.entries()).sort((a, b) => b[1] - a[1])
       <section>
         <h2 class="text-sm font-semibold text-text-muted tracking-wider uppercase mb-4 px-1">标签云</h2>
         <div class="glass-card !rounded-3xl p-8 !scale-100">
-          <TagCloud tags={tagItems} client:visible />
+          <TagCloud tags={tagItems} client:visible baseUrl={baseUrl} />
         </div>
       </section>
     </div>

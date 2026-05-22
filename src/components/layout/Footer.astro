@@ -1,5 +1,6 @@
 ---
 import { SITE_CONFIG } from '../../data/site';
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <footer class="mt-20 pb-8">
@@ -16,7 +17,7 @@ import { SITE_CONFIG } from '../../data/site';
         <a href={SITE_CONFIG.socialLinks.email} class="text-xs text-text-muted hover:text-text-primary transition-colors">
           Email
         </a>
-        <a href="/rss.xml" class="text-xs text-text-muted hover:text-accent transition-colors">
+        <a href={`${baseUrl}/rss.xml`} class="text-xs text-text-muted hover:text-accent transition-colors">
           RSS
         </a>
       </div>

@@ -13,9 +13,11 @@ interface PostItem {
 
 interface Props {
   posts: PostItem[];
+  baseUrl?: string;
 }
 
-export default function SearchBox({ posts }: Props) {
+export default function SearchBox({ posts, baseUrl = '' }: Props) {
+  const prefix = baseUrl.replace(/\/$/, '');
   const [query, setQuery] = useState('');
   const [focused, setFocused] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -117,7 +119,7 @@ export default function SearchBox({ posts }: Props) {
             results.map((post, i) => (
               <a
                 key={post.slug}
-                href={`/posts/${post.slug}`}
+                href={`${prefix}/posts/${post.slug}`}
                 className={[
                   'flex items-start gap-3 px-4 py-3 border-b border-white/5 last:border-b-0 transition-colors',
                   i === activeIndex

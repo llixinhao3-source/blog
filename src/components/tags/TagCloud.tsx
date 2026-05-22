@@ -9,9 +9,11 @@ interface TagItem {
 
 interface Props {
   tags: TagItem[];
+  baseUrl?: string;
 }
 
-export default function TagCloud({ tags }: Props) {
+export default function TagCloud({ tags, baseUrl = '' }: Props) {
+  const prefix = baseUrl.replace(/\/$/, '');
   const maxCount = Math.max(...tags.map((t) => t.count), 1);
   const minCount = Math.min(...tags.map((t) => t.count), 1);
 
@@ -27,7 +29,7 @@ export default function TagCloud({ tags }: Props) {
       {sortedTags.map((tag, i) => (
         <motion.a
           key={tag.name}
-          href={`/tags/${tag.name}`}
+          href={`${prefix}/tags/${tag.name}`}
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: i * 0.05, duration: 0.3 }}

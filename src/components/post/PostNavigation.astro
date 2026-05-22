@@ -7,13 +7,14 @@ interface Props {
 }
 
 const { prev, next } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 {prev || next ? (
   <nav class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-10">
     {prev ? (
       <a
-        href={`/posts/${prev.id}`}
+        href={`${baseUrl}/posts/${prev.id}`}
         class="glass-card !rounded-2xl p-5 group !scale-100 hover:!scale-[1.01]"
       >
         <span class="text-xs text-text-muted block mb-1">← 上一篇</span>
@@ -26,7 +27,7 @@ const { prev, next } = Astro.props;
     )}
     {next ? (
       <a
-        href={`/posts/${next.id}`}
+        href={`${baseUrl}/posts/${next.id}`}
         class="glass-card !rounded-2xl p-5 group !scale-100 hover:!scale-[1.01] text-right"
       >
         <span class="text-xs text-text-muted block mb-1">下一篇 →</span>

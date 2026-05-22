@@ -8,7 +8,8 @@ const openClawFeatures = [
   { title: '大模型接入网关', desc: '设计统一的大模型接入层，支持 GPT-4、Claude、DeepSeek 等多模型动态路由与负载均衡，结合 RAG 检索增强提升回答准确率。', tags: ['API 网关', 'RAG', '向量数据库', '语义路由'] },
 ];
 
-export default function HardwareZone() {
+export default function HardwareZone({ baseUrl }: { baseUrl?: string }) {
+  const prefix = baseUrl?.replace(/\/$/, '') || '';
   return (
     <div className="glass-card !rounded-3xl p-6 sm:p-8 !scale-100 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-32 h-32 opacity-[0.03]">
@@ -48,7 +49,7 @@ export default function HardwareZone() {
       </div>
 
       <div className="mt-5 pt-4 border-t border-white/10">
-        <a href="/projects" className="hover-target text-xs text-accent hover:opacity-80 transition-colors inline-flex items-center gap-1">
+        <a href={`${prefix}/projects`} className="hover-target text-xs text-accent hover:opacity-80 transition-colors inline-flex items-center gap-1">
           查看完整项目详情 →
         </a>
       </div>

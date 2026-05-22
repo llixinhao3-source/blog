@@ -5,6 +5,8 @@ import HardwareLab from '../about/HardwareLab.tsx';
 import HardwareZone from '../about/HardwareZone.tsx';
 import TypewriterTitle from '../about/TypewriterTitle.tsx';
 import SocialLinks from '../about/SocialLinks.astro';
+
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <div class="max-w-4xl w-full mx-auto px-[8%] pb-12">
@@ -63,7 +65,7 @@ import SocialLinks from '../about/SocialLinks.astro';
       <span class="text-accent-purple text-lg">🤖</span>
       <h3 class="hover-target text-sm font-semibold text-text-muted tracking-wider uppercase">AI Agent 专区</h3>
     </div>
-    <HardwareZone client:visible />
+    <HardwareZone client:visible baseUrl={baseUrl} />
   </section>
 
 </div>
