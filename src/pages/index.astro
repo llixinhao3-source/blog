@@ -30,12 +30,12 @@ for (const post of publishedPosts) {
   }
 }
 
-const sections = [
-  { id: 'home', label: '首页' },
-  { id: 'articles', label: '文章' },
-  { id: 'projects', label: '项目' },
-  { id: 'about', label: '关于' },
-];
+import { NAV_ITEMS } from '../data/site';
+
+const sections = NAV_ITEMS.map(item => ({
+  id: item.href === '/' ? 'home' : item.href.replace('/', ''),
+  label: item.label,
+}));
 
 const sectionBaseStyle = 'position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; transition: opacity 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), filter 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);';
 const sectionActiveStyle = sectionBaseStyle + ' opacity: 1; transform: scale(1) translateY(0); filter: blur(0px); pointer-events: auto; z-index: 10;';
@@ -51,7 +51,7 @@ const sectionInactiveStyle = sectionBaseStyle + ' opacity: 0; transform: scale(0
       <HeroSection posts={searchPosts} />
     </div>
 
-    <div id="section-articles" style={sectionInactiveStyle}>
+    <div id="section-posts" style={sectionInactiveStyle}>
       <div class="section-scroll h-full overflow-y-auto" style="scrollbar-width: thin; padding-top: 80px;">
         <div class="max-w-3xl w-full mx-auto px-[8%] pb-8">
           {/* Stats Cards */}
