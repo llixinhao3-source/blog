@@ -5,43 +5,43 @@ import { useRef } from 'react';
 
 const techModules = [
   {
-    category: 'AI Agent 开发',
-    color: '#c084fc',
-    items: [
-      { name: 'OpenClaw 技能开发', level: 85 },
-      { name: 'MCP 协议', level: 80 },
-      { name: 'Prompt 工程', level: 78 },
-      { name: 'Dify / n8n 编排', level: 72 },
-    ],
-  },
-  {
-    category: '嵌入式 & 硬件',
+    category: '数据 & SQL',
     color: '#38bdf8',
     items: [
-      { name: 'ESP32-S3 开发', level: 88 },
-      { name: 'FreeRTOS', level: 75 },
-      { name: 'PCB 设计', level: 60 },
-      { name: '3D 建模', level: 55 },
+      { name: 'MySQL / PostgreSQL', level: 88 },
+      { name: 'Tableau', level: 82 },
+      { name: 'Power BI', level: 80 },
+      { name: 'RFM 模型分析', level: 78 },
     ],
   },
   {
-    category: '后端 & 架构',
+    category: 'Python 全栈',
+    color: '#c084fc',
+    items: [
+      { name: 'Pandas / NumPy', level: 90 },
+      { name: 'FastAPI 异步', level: 85 },
+      { name: 'Scikit-learn', level: 72 },
+      { name: '影刀 RPA 自动化', level: 80 },
+    ],
+  },
+  {
+    category: '前端 & 后端',
     color: '#a78bfa',
     items: [
-      { name: 'FastAPI', level: 92 },
-      { name: 'Node.js', level: 85 },
-      { name: 'Redis / PostgreSQL', level: 80 },
-      { name: 'CI/CD 管线', level: 75 },
+      { name: 'Vue2 / Vue3', level: 82 },
+      { name: 'Java Spring Boot', level: 80 },
+      { name: 'Redis / Navicat', level: 85 },
+      { name: 'Node.js', level: 75 },
     ],
   },
   {
-    category: '大模型 & 微调',
+    category: 'AI Agent 编排',
     color: '#e879f9',
     items: [
-      { name: 'GPT / DeepSeek API', level: 82 },
-      { name: 'RAG 检索增强', level: 70 },
-      { name: 'LoRA 微调', level: 60 },
-      { name: '语义路由', level: 65 },
+      { name: 'OpenClaw 技能开发', level: 88 },
+      { name: 'Hermes Agent', level: 82 },
+      { name: 'Coze / ComfyUI 工作流', level: 80 },
+      { name: 'GPT / DeepSeek API', level: 85 },
     ],
   },
 ];

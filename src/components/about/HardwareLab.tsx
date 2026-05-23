@@ -3,13 +3,13 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
-const hardwareParams = [
-  { label: 'MCU', value: 'ESP32-S3N16R8', detail: 'Xtensa LX7 · 240MHz · 16MB Flash · 8MB PSRAM' },
-  { label: 'Audio', value: 'Dual Mic Array', detail: 'INMP441 × 2 · I2S · Beamforming · 16kHz' },
-  { label: 'Serial', value: 'CH341 UART', detail: 'USB-to-UART Bridge · 921600 baud · Auto-Reset' },
-  { label: 'Display', value: 'SSD1306 OLED', detail: '128×64 · I2C @ 0x3C · 3.3V Logic' },
-  { label: 'Power', value: 'TP4056 + DW01A', detail: 'LiPo 3.7V 1000mAh · USB-C Charging · Protection' },
-  { label: 'GPIO', value: 'Expander PCF8574', detail: 'I2C 8-bit · 0x20 · Button Matrix · LED Control' },
+const bizParams = [
+  { label: 'DB', value: 'Navicat Premium', detail: 'PostgreSQL · MySQL · Redis · 全品库数据管理' },
+  { label: 'Backend', value: 'Python + Java', detail: 'FastAPI 异步 · Spring Boot · Node.js 微服务' },
+  { label: 'Frontend', value: 'Vue2 / Vue3', detail: '单页登录 · 生图软件 · 业务系统仪表盘' },
+  { label: 'Agent', value: 'OpenClaw · Hermes', detail: '多 Agent 编排 · 技能管理 · Cron 定时调度' },
+  { label: 'BI', value: 'Tableau + Power BI', detail: '自动化仪表盘 · 实时监控 · 订单数据可视化' },
+  { label: 'RPA', value: '影刀 + Coze', detail: '流程自动化 · 平台操作 · 全链路无人值守' },
 ];
 
 export default function HardwareLab() {
@@ -20,7 +20,7 @@ export default function HardwareLab() {
     <div ref={ref} className="mb-6">
       <div className="flex items-center gap-2 mb-4 px-1">
         <span className="text-accent-purple text-lg">⚡</span>
-        <h3 className="hover-target text-sm font-semibold text-text-muted tracking-wider uppercase">Hardware Lab</h3>
+        <h3 className="hover-target text-sm font-semibold text-text-muted tracking-wider uppercase">业务系统技术栈</h3>
       </div>
 
       <div
@@ -35,12 +35,12 @@ export default function HardwareLab() {
           <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#ef4444' }} />
           <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#fbbf24' }} />
           <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#22c55e' }} />
-          <span className="text-[10px] text-text-muted ml-2">openclaw.config.ts</span>
+          <span className="text-[10px] text-text-muted ml-2">tech-stack.config.ts</span>
         </div>
 
         <div className="overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
           <div className="flex gap-0 min-w-max">
-            {hardwareParams.map((hw, i) => (
+            {bizParams.map((hw, i) => (
               <motion.div
                 key={hw.label}
                 className="px-5 py-4 border-r last:border-r-0 flex-shrink-0"

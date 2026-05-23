@@ -11,47 +11,77 @@ interface ProjectDetail {
   metrics: { label: string; value: string }[];
   techStack: string[];
   architectureNote: string;
+  link?: string;
 }
 
 const projects: ProjectDetail[] = [
   {
     id: 'edu-island',
-    title: '智能教育岛屿',
-    subtitle: '学职圈圈 2.0',
-    description: '利用 AI 智能体构建教育交互系统，通过个性化学习路径推荐与实时课堂反馈机制，将课堂参与率提升 20%。基于大模型的智能问答系统，为学生提供 7×24 的学业支持。',
+    title: '学职圈圈 2.0 · AI 教育平台',
+    subtitle: 'GPT + DeepSeek 多模型教学系统',
+    description: '调用 GPT 与 DeepSeek 等主流大模型接口，将 AI 与传统教育结合。通过微调大模型优化课程推荐逻辑，AI 老师智能体 7×24 实时答疑。基于学生登录行为数据在云教室中生成个性化形象，打造沉浸式课堂体验。',
     metrics: [
       { label: '课堂参与率', value: '+20%' },
-      { label: '问答响应', value: '<1s' },
-      { label: '日活用户', value: '500+' },
+      { label: '课程点击率', value: '+46%' },
+      { label: '课堂到课率', value: '+35%' },
     ],
-    techStack: ['Python', 'FastAPI', 'GPT API', 'WebSocket', 'PostgreSQL'],
-    architectureNote: 'AI Agent → 知识图谱 → 个性化推荐引擎 → WebSocket 实时推送 → 学生端 Dashboard',
+    techStack: ['Python', 'Java', 'GPT API', 'DeepSeek', 'WebSocket'],
+    architectureNote: '大模型 API → AI 老师 Agent → 知识图谱推荐 → 云教室形象渲染 → 学生互动终端',
   },
   {
-    id: 'quant-lab',
-    title: '量化交易实验室',
-    subtitle: 'WebSocket 实时推送系统',
-    description: '研发基于 WebSocket 的实时行情推送系统，结合多因子选股策略与动态止盈止损，回测最大回撤仅 7.1%。支持毫秒级行情数据推送，资金曲线可视化展示。',
+    id: 'ecommerce',
+    title: '电商运营自动化平台',
+    subtitle: 'OpenClaw 多 Agent 全链路',
+    description: '基于 OpenClaw 多 Agent 编排实现选品→生图→文案→上架全流程自动化。影刀 RPA 接管平台发布层，gpt-image 负责商品图生成，Node.js 构建调度中台。实现一人管理全店铺日常运营。',
+    metrics: [
+      { label: '全流程自动化', value: '100%' },
+      { label: 'Agent 数量', value: '4+' },
+      { label: '覆盖平台', value: '多店铺' },
+    ],
+    techStack: ['OpenClaw', '影刀RPA', 'Playwright', 'gpt-image', 'Node.js'],
+    architectureNote: '选品 Agent → 生图 Agent → 文案 Agent → 上架 Agent → 影刀 RPA 发布层',
+    link: 'https://github.com/llixinhao3-source/dianshang_promote',
+  },
+  {
+    id: 'sentiment',
+    title: '泡泡玛特 · 舆情情感分析',
+    subtitle: '微博 / 小红书 10 万+ 数据',
+    description: '爬取并清洗超 10 万条社交媒体用户评论，构建情感分析模型洞察品牌口碑。识别 KOL 正向内容在负面舆情期转发量提升 60%，为企业舆情应对提供数据支撑。',
+    metrics: [
+      { label: '数据量', value: '10万+' },
+      { label: 'KOL 转发增幅', value: '+60%' },
+      { label: '情感模型准确率', value: '87%' },
+    ],
+    techStack: ['Python', 'MySQL', '爬虫', '情感分析', 'NLP'],
+    architectureNote: '分布式爬虫 → 数据清洗 → NLP 情感分类 → 可视化报告',
+  },
+  {
+    id: 'finance',
+    title: '股票策略自动化交易',
+    subtitle: '双轮驱动量化平台',
+    description: '"新闻+技术面"双轮驱动：抓取宏观/个股新闻做情感打分，叠加斐波那契、KDJ、MACD、RSI 等 8 项技术指标进行多因素分析。WebSocket 实时推送资金曲线至企业微信，2% 回撤自动降半仓，4% 清仓，三年回测最大回撤仅 7.1%。',
     metrics: [
       { label: '最大回撤', value: '7.1%' },
-      { label: '推送延迟', value: '<50ms' },
-      { label: '策略胜率', value: '62%' },
+      { label: '技术指标', value: '8项' },
+      { label: '回测周期', value: '3年' },
     ],
-    techStack: ['Node.js', 'WebSocket', 'Redis', 'React', 'Canvas'],
-    architectureNote: '行情源 → WebSocket Server → Redis 缓存 → 策略引擎 → 信号分发 → 前端资金曲线',
+    techStack: ['Python', 'Java', 'Vue2', 'Node.js', 'WebSocket', 'Navicat'],
+    architectureNote: '新闻爬虫 → 情感打分 → 技术指标计算 → 策略引擎 → WebSocket 推送 → 企业微信',
+    link: 'https://github.com/llixinhao3-source/finance',
   },
   {
-    id: 'sentiment-radar',
-    title: '舆情监控雷达',
-    subtitle: '10 万+数据情感分析',
-    description: '构建分布式爬虫系统清洗 10 万+社交媒体数据，通过 NLP 情感分析模型洞察品牌口碑走向。实时监控舆情波动，异常预警响应时间缩短至 3 分钟。',
+    id: 'vibe-coding',
+    title: 'Vibe-Coding · 个人 AI 形象',
+    subtitle: 'PyQt6 + GenericAgent 对话系统',
+    description: '基于 PyQt6 开发桌面 AI 对话应用，集成自研 GenericAgent 引擎，实现多轮上下文理解的智能对话。支持流式文本生成、像素动画反馈及实时交互，打造个人技术品牌 IP。',
     metrics: [
-      { label: '清洗数据量', value: '10万+' },
-      { label: '预警响应', value: '<3min' },
-      { label: '情感准确率', value: '87%' },
+      { label: '对话轮次', value: '多轮' },
+      { label: '技术栈', value: 'PyQt6' },
+      { label: '开源', value: 'GitHub' },
     ],
-    techStack: ['Python', 'Scrapy', 'BERT', 'Elasticsearch', 'Grafana'],
-    architectureNote: '分布式爬虫 → 数据清洗管线 → BERT 情感分类 → Elasticsearch → Grafana 可视化大屏',
+    techStack: ['Python', 'PyQt6', 'GenericAgent', '流式生成'],
+    architectureNote: 'GenericAgent 引擎 → 上下文管理 → 流式文本 → 像素动画 → PyQt6 UI',
+    link: 'https://github.com/llixinhao3-source/claw-ga',
   },
 ];
 
@@ -124,7 +154,7 @@ export default function ExpandableProjectCards() {
                         </div>
                       </div>
 
-                      <div>
+                      <div className="mb-3">
                         <span className="text-xs text-text-muted block mb-1.5">架构流</span>
                         <div
                           className="text-xs p-3 rounded-xl bg-accent/5 border border-accent/15"
@@ -133,6 +163,19 @@ export default function ExpandableProjectCards() {
                           {project.architectureNote}
                         </div>
                       </div>
+
+                      {project.link && (
+                        <div className="mt-3">
+                          <a
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-accent hover:underline inline-flex items-center gap-1"
+                          >
+                            查看项目 →
+                          </a>
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 )}

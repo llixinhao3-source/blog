@@ -5,8 +5,8 @@ export const SITE_CONFIG = {
   url: 'https://sevik.me',
   startDate: new Date('2026-05-13'),
   socialLinks: {
-    github: 'https://github.com/dashboard',
-    email: 'mailto:sevik@example.com',
+    github: 'https://github.com/llixinhao3-source',
+    email: 'mailto:951659093@qq.com',
   },
 };
 

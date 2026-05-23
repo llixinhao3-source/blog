@@ -14,21 +14,30 @@ interface TimelineEntry {
 
 const timelineData: TimelineEntry[] = [
   {
-    period: '2025.03 — 至今',
-    title: 'Python 开发工程师',
-    company: '上海织画',
+    period: '2026.01 — 至今',
+    title: 'AI 开发工程师',
+    company: '广州市乐百畅厨具有限责任公司',
     description:
-      '负责后端架构重构，接入 Redis 缓存层，将 API 响应时间优化 60%。主导数据库查询优化与微服务拆分，建立完善的接口文档与自动化测试体系。',
-    techStack: ['Python', 'FastAPI', 'Redis', 'MySQL', 'Docker'],
-    highlight: 'API 响应优化 60%',
+      '基于 OpenClaw 与 Hermes 双框架设计多 Agent 任务编排调度脚本，实现技能统一管理与流程闭环。编写 Python/影刀 RPA 自动化脚本，设计 Vue3 + Python 生图软件与全品库业务系统。集成 Cron 定时调度与心跳机制，保障自动化流程 7×24 稳定运行。',
+    techStack: ['OpenClaw', 'Hermes', 'Python', 'Vue3', '影刀RPA', 'Cron'],
+    highlight: '多Agent统一编排',
   },
   {
-    period: '2023.06 — 2025.02',
-    title: '数据运营实习生',
-    company: '广东益丰源',
+    period: '2025.03 — 至今',
+    title: 'Python 开发工程师',
+    company: '上海织画信息科技有限公司',
     description:
-      '利用 RFM 模型对用户进行分层分析，设计精准营销策略，助力支付转化率提升 25%。搭建自动化数据看板，实现核心指标的实时监控与异常预警。',
-    techStack: ['Python', 'Pandas', 'SQL', 'RFM 模型', '数据可视化'],
+      '用 Vue2 全新搭建单页登录应用，登录成功率从 92% 提升至 99%。Java Spring Boot 重构后端并接入 Redis 缓存名单，登录耗时从 5s 降至 0.8s，30s 内全系统同步。实现素材一键下载、内容抓取审核发布全流程自动化，为自媒体创作者提效增能。',
+    techStack: ['Vue2', 'Java', 'Spring Boot', 'Redis', 'Navicat', 'Node.js'],
+    highlight: '登录耗时 5s → 0.8s',
+  },
+  {
+    period: '2023.06 — 2024.01',
+    title: '数据运营',
+    company: '广东益丰源实业有限公司',
+    description:
+      '搭建 Python 日报自动化脚本并集成至 Coze 工作流，用 Tableau / Power BI 实现订单数据可视化。基于 RFM 模型微调圈选高潜人群，精准投放优惠券，支付转化率提升 25%。清洗 7 日订单数据，汇报效果一目了然。',
+    techStack: ['Python', 'Pandas', 'Tableau', 'Power BI', 'Coze', 'SQL'],
     highlight: '支付转化率 +25%',
   },
   {
@@ -36,9 +45,9 @@ const timelineData: TimelineEntry[] = [
     title: '大数据专业（本科）',
     company: '广东海洋大学寸金学院',
     description:
-      '系统学习大数据技术栈，成绩保持专业前 10%。参与多个数据挖掘与机器学习课程项目，自建个人技术博客记录学习路径。',
-    techStack: ['Python', 'SQL', '机器学习', '数据挖掘', '统计学'],
-    highlight: '专业前 10%',
+      '专业排名前 10%，系统学习大数据可视化、客户关系管理、市场调查与预测、Python 爬虫、Spring Boot、Java EE 等核心课程。获大学生新文科实践创新大赛三等奖、中国国际"互联网+"大学生创新创业大赛三等奖。持工信部数据分析师证书。',
+    techStack: ['Python', 'SQL', 'Java', 'Spring Boot', '大数据', '机器学习'],
+    highlight: '专业前 10% · 双竞赛三等奖',
   },
 ];
 

@@ -10,100 +10,80 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <BaseLayout
-  title="工程师数字档案"
-  description="Sevik · OpenClaw 应用工程师 / AI Agent 开发工程师。从智能体调教到企业工作流部署的全链路记录。"
+  title="关于我"
+  description="李心皓 — AI Agent 开发工程师 · 专注 OpenClaw 应用落地与全链路自动化"
 >
-  <section class="pt-28 pb-16 px-6">
-    <div class="max-w-3xl mx-auto">
+  <main class="min-h-screen relative">
+    <div class="mx-auto max-w-5xl px-4 sm:px-8 pb-20 pt-6">
 
-      <!-- 身份区 -->
-      <section class="mb-12">
-        <div class="glass-card !rounded-3xl p-6 sm:p-8 !scale-100">
-          <div class="flex items-start gap-6 mb-5">
+      <header class="mb-8 sm:mb-12">
+        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+          <div class="flex-1">
+            <h1 class="text-2xl sm:text-3xl font-bold text-text-primary mb-3 tracking-tight">李心皓</h1>
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-text-secondary mb-4">
+              <span class="flex items-center gap-1.5">24岁</span>
+              <span class="text-text-muted">·</span>
+              <span class="flex items-center gap-1.5">
+                <span class="text-xs text-accent">📍</span> 本科 · 广东海洋大学寸金学院
+              </span>
+              <span class="text-text-muted">·</span>
+              <span class="flex items-center gap-1.5">
+                <span class="text-xs text-accent">🎓</span> 大数据专业
+              </span>
+            </div>
+            <p class="text-text-secondary leading-relaxed max-w-2xl">
+              AI Agent 开发工程师，专注于 <span class="text-accent">OpenClaw</span> 与 <span class="text-accent">Hermes</span> 双引擎框架落地。
+              从 Python 全栈到多 Agent 编排，从数据可视化到全链路自动化——热衷用代码驱动业务效率的质变。
+            </p>
+            <p class="text-xs text-text-muted mt-3">
+              工信部数据分析师 · 英语四级 · 驾驶证
+            </p>
+          </div>
+          <div class="flex-shrink-0">
             <div
-              class="w-20 h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-2xl flex-shrink-0"
-              style="font-family: 'JetBrains Mono', monospace;"
+              class="w-20 h-20 rounded-2xl flex items-center justify-center"
+              style="background: linear-gradient(135deg, rgba(192,132,252,0.15), rgba(232,121,249,0.1)); border: 1px solid rgba(192,132,252,0.2);"
             >
-              S
-            </div>
-            <div>
-              <h1 class="text-2xl font-bold tracking-tight mb-1" style="font-family: 'JetBrains Mono', monospace;">
-                李心皓
-              </h1>
-              <p class="text-sm text-accent mb-1">OpenClaw 应用工程师 / AI Agent 开发工程师</p>
-              <p class="text-sm text-text-secondary leading-relaxed mb-3">
-                专注 OpenClaw 应用落地与 AI Agent 全链路开发。从智能体的 Prompt 调教、工具链集成，到企业级 AI 工作流的自动化部署——每一步都追求工程化的极致效率。
-              </p>
-              <SocialLinks />
-            </div>
-          </div>
-
-          <div class="grid grid-cols-3 gap-3">
-            <div class="text-center p-3 rounded-2xl bg-white/5 border border-white/5">
-              <div class="text-lg font-bold tabular-nums text-accent" style="font-family: 'JetBrains Mono', monospace;">14</div>
-              <div class="text-xs text-text-muted mt-1">技术博文</div>
-            </div>
-            <div class="text-center p-3 rounded-2xl bg-white/5 border border-white/5">
-              <div class="text-lg font-bold tabular-nums text-accent-warm" style="font-family: 'JetBrains Mono', monospace;">25</div>
-              <div class="text-xs text-text-muted mt-1">知识标签</div>
-            </div>
-            <div class="text-center p-3 rounded-2xl bg-white/5 border border-white/5">
-              <div class="text-lg font-bold tabular-nums text-text-primary" style="font-family: 'JetBrains Mono', monospace;">2 万</div>
-              <div class="text-xs text-text-muted mt-1">知识总量</div>
+              <span class="text-3xl">🧑‍💻</span>
             </div>
           </div>
         </div>
+        <SocialLinks />
+      </header>
+
+      <section class="mb-8 sm:mb-12">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-base">📊</span>
+          <h2 class="hover-target text-sm font-semibold text-text-muted tracking-wider uppercase">技能雷达</h2>
+        </div>
+        <TechStackRadar client:visible />
       </section>
 
-      <!-- 核心技术引擎 -->
-      <section class="mb-12">
-        <div class="flex items-center gap-2 mb-5 px-1">
-          <span class="text-accent text-lg">◈</span>
-          <h2 class="text-sm font-semibold text-text-muted tracking-wider uppercase">核心技术引擎 · 技能雷达</h2>
+      <section class="mb-8 sm:mb-12">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-base">💡</span>
+          <h2 class="hover-target text-sm font-semibold text-text-muted tracking-wider uppercase">项目经历</h2>
         </div>
-        <div class="glass-card !rounded-3xl p-6 sm:p-8 !scale-100">
-          <TechStackRadar client:visible />
-        </div>
-      </section>
-
-      <!-- 实验室实战 -->
-      <section class="mb-12">
-        <div class="flex items-center gap-2 mb-5 px-1">
-          <span class="text-accent text-lg">⚗</span>
-          <h2 class="text-sm font-semibold text-text-muted tracking-wider uppercase">实验室实战 · 交互式项目卡片</h2>
-        </div>
-        <p class="text-sm text-text-secondary mb-5 px-1 leading-relaxed">
-          点击卡片展开查看架构图与关键指标。每一个项目都是一份完整的实验报告。
-        </p>
         <ExpandableProjectCards client:visible />
       </section>
 
-      <!-- 进化时间线 -->
-      <section class="mb-12">
-        <div class="flex items-center gap-2 mb-5 px-1">
-          <span class="text-accent text-lg">⏳</span>
-          <h2 class="text-sm font-semibold text-text-muted tracking-wider uppercase">进化时间线 · 从校园到职场</h2>
+      <section class="mb-8 sm:mb-12">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-base">⚡</span>
+          <h2 class="hover-target text-sm font-semibold text-text-muted tracking-wider uppercase">职业经历</h2>
         </div>
         <CareerTimeline client:visible />
       </section>
 
-      <!-- Openclaw -->
-      <section class="mb-12">
+      <section class="mb-8 sm:mb-12">
         <HardwareZone client:visible baseUrl={baseUrl} />
       </section>
 
-      <!-- 知识库 -->
-      <section>
-        <div class="glass-card !rounded-3xl p-6 sm:p-8 text-center !scale-100">
-          <p class="text-sm text-text-secondary mb-3">
-            对 OpenClaw 应用落地与 AI Agent 全链路开发的深度思考，收录于本博客知识库
-          </p>
-          <a href={`${baseUrl}/posts`} class="hover-target inline-flex items-center gap-2 text-sm text-accent hover:opacity-80 transition-colors">
-            浏览全部 14 篇文章 →
-          </a>
-        </div>
-      </section>
-
+      <div class="text-center py-6 border-t border-white/5">
+        <a href={`${baseUrl}/posts`} class="hover-target inline-flex items-center gap-2 text-sm text-accent hover:opacity-80 transition-colors">
+          查看所有文章 →
+        </a>
+      </div>
     </div>
-  </section>
+  </main>
 </BaseLayout>

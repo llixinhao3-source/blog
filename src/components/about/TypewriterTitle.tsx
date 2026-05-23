@@ -3,10 +3,10 @@
 import { useState, useEffect, useRef } from 'react';
 
 const titles = [
-  'OpenClaw 应用工程师',
   'AI Agent 开发工程师',
-  '嵌入式硬件爱好者',
-  '全栈工程实践者',
+  'Python 全栈开发者',
+  '数据分析师',
+  'OpenClaw / Hermes 实践者',
 ];
 
 export default function TypewriterTitle() {

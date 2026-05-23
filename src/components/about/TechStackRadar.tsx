@@ -4,11 +4,11 @@ import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
 const skillAxes = [
-  { name: '嵌入式开发', level: 85, subskills: ['ESP32-S3', 'FreeRTOS', 'IDF', 'PCB 设计'], highlight: 'OpenClaw 硬件' },
-  { name: 'AI Agent 编排', level: 80, subskills: ['智能体调教', 'MCP 协议', '工具链集成', 'Dify/n8n'], highlight: '端到端部署' },
-  { name: '硬件结构设计', level: 70, subskills: ['3D 建模', '外壳设计', '散热方案', '接口规划'], highlight: '双麦克风阵列' },
-  { name: '模型微调', level: 65, subskills: ['LoRA', 'RAG 检索', 'DeepSeek', '多模型路由'], highlight: '语义路由' },
-  { name: '后端架构', level: 90, subskills: ['FastAPI', 'Node.js', 'Redis', 'PostgreSQL'], highlight: 'API 优化 60%' },
+  { name: 'Python 全栈', level: 90, subskills: ['FastAPI', 'Pandas', 'NumPy', '影刀RPA'], highlight: '异步高并发' },
+  { name: 'AI Agent', level: 88, subskills: ['OpenClaw', 'Hermes', 'Coze', 'MCP 协议'], highlight: '多Agent编排' },
+  { name: '数据分析', level: 85, subskills: ['SQL', 'Tableau', 'Power BI', 'RFM 模型'], highlight: '可视化仪表盘' },
+  { name: '大模型应用', level: 82, subskills: ['GPT API', 'DeepSeek', 'ComfyUI', 'Prompt 工程'], highlight: '生图+问答' },
+  { name: '前后端开发', level: 84, subskills: ['Vue2/3', 'Java Spring Boot', 'Redis', 'Node.js'], highlight: '全链路开发' },
 ];
 
 export default function TechStackRadar() {
