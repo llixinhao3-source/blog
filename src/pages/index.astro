@@ -151,7 +151,7 @@ const sectionInactiveStyle = sectionBaseStyle + ' opacity: 0; transform: scale(0
       </div>
     </div>
 
-    <FullPageScroll client:load sections={sections} />
+    <FullPageScroll client:load sections={sections} baseUrl={import.meta.env.BASE_URL} />
   </div>
 
   <style>

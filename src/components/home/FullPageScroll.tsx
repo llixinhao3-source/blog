@@ -9,12 +9,13 @@ interface Section {
 
 interface FullPageScrollProps {
   sections: Section[];
+  baseUrl?: string;
 }
 
 const XIAOMI_EASE = 'cubic-bezier(0.645, 0.045, 0.355, 1)';
 const TRANSITION_DURATION = '0.8s';
 
-export default function FullPageScroll({ sections }: FullPageScrollProps) {
+export default function FullPageScroll({ sections, baseUrl = '' }: FullPageScrollProps) {
   const [current, setCurrent] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -25,11 +26,19 @@ export default function FullPageScroll({ sections }: FullPageScrollProps) {
 
   const goTo = useCallback((index: number) => {
     if (isTransitioning || index < 0 || index >= sections.length || index === current) return;
+
+    const targetSection = sections[index];
+    if (targetSection.id === 'about') {
+      const prefix = baseUrl.replace(/\/$/, '');
+      window.location.href = `${prefix}/about/`;
+      return;
+    }
+
     setIsTransitioning(true);
     setCurrent(index);
     wheelAccumRef.current = 0;
     setTimeout(() => setIsTransitioning(false), 900);
-  }, [current, isTransitioning, sections.length]);
+  }, [current, isTransitioning, sections]);
 
   const goNext = useCallback(() => goTo(current + 1), [current, goTo]);
   const goPrev = useCallback(() => goTo(current - 1), [current, goTo]);
